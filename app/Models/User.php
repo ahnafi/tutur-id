@@ -5,6 +5,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -12,7 +14,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -55,5 +57,20 @@ class User extends Authenticatable implements FilamentUser
         return match (true) {
             $this->hasRole('admin') && $panelId === 'tuturadmin' => true,
         };
+    }
+
+    public function stories(): HasMany
+    {
+        return $this->hasMany(Story::class, 'created_by');
+    }
+
+    public function quizResults(): HasMany
+    {
+        return $this->hasMany(QuizResult::class, 'user_id');
+    }
+
+    public function communitySubmissions(): HasMany
+    {
+        return $this->hasMany(CommunitySubmission::class);
     }
 }
