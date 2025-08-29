@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Stories\Schemas;
 
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -16,20 +17,26 @@ class StoryForm
             ->components([
                 TextInput::make('title')
                     ->required(),
-                TextInput::make('slug')
-                    ->required(),
-                Textarea::make('content')
-                    ->columnSpanFull(),
                 TextInput::make('origin_place'),
                 TextInput::make('gmaps_link'),
                 Toggle::make('is_official')
                     ->required(),
-                TextInput::make('created_by')
-                    ->required()
-                    ->numeric(),
-                Select::make('story_category_id')
-                    ->relationship('storyCategory', 'title')
+                Select::make('created_by')
+                    ->relationship('creator', 'name')
+                    ->searchable(['name', 'email'])
+                    ->preload()
                     ->required(),
+                Select::make('story_category_id')
+                    ->createOptionForm([
+                        TextInput::make('title')
+                            ->required(),
+                    ])
+                    ->relationship('storyCategory', 'title')
+                    ->preload()
+                    ->searchable()
+                    ->required(),
+                RichEditor::make('content')
+                    ->columnSpanFull(),
             ]);
     }
 }

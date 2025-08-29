@@ -26,7 +26,7 @@ class Story extends Model
     public function setTitleAttribute($value): void
     {
         $this->attributes['title'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
+        $this->attributes['slug'] = Str::slug($value) . '-' . Str::random(5);
     }
 
     public function storyCategory(): BelongsTo

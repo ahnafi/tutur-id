@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Quizzes\Schemas;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Schema;
 
 class QuizForm
@@ -14,6 +15,8 @@ class QuizForm
             ->components([
                 Select::make('story_id')
                     ->relationship('story', 'title')
+                    ->searchable()
+                    ->preload()
                     ->required(),
                 TextInput::make('question')
                     ->required(),
@@ -25,8 +28,15 @@ class QuizForm
                     ->required(),
                 TextInput::make('option_d')
                     ->required(),
-                TextInput::make('correct_answer')
-                    ->required(),
+                ToggleButtons::make('correct_answer')
+                    ->inline()
+                    ->required()
+                    ->options([
+                        'A' => 'A',
+                        'B' => 'B',
+                        'C' => 'C',
+                        'D' => 'D',
+                    ])
             ]);
     }
 }

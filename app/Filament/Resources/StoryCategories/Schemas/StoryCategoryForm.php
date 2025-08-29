@@ -13,8 +13,6 @@ class StoryCategoryForm
             ->components([
                 TextInput::make('title')
                     ->required(),
-                TextInput::make('slug')
-                    ->required(),
             ]);
     }
 }
