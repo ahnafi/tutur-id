@@ -3,8 +3,8 @@ import { Link } from '@inertiajs/react';
 
 export function Footer() {
     return (
-        <footer className="border-t bg-card">
-            <div className="container pt-12 pb-4">
+        <footer className="border-t bg-card section-padding-x">
+            <div className="container pt-12 pb-4 max-w-screen-xl">
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
                     {/* Brand Section */}
                     <div className="space-y-4">

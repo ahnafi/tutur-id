@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Layout from '@/layouts/layout';
-import { Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { BookOpen, Clock, MapPin, Play, Search, Star, Trophy, Users } from 'lucide-react';
 
 export default function HomePage() {
@@ -39,6 +39,8 @@ export default function HomePage() {
 
     return (
         <Layout>
+            <Head title="Selamat Datang" />
+
             <div className="space-y-16">
                 {/* Hero Section */}
                 <section className="section-padding-x relative overflow-hidden pt-16">
