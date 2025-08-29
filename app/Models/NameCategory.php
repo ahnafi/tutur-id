@@ -6,39 +6,30 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class Name extends Model
+class NameCategory extends Model
 {
     use SoftDeletes;
 
     protected $fillable = [
         "name",
-        "meaning",
-        "origin",
-        "description",
-        "views",
-        "name_category_id"
+        "slug",
     ];
 
     protected static function booted(): void
     {
-        static::creating(function ($name) {
-            $baseSlug = Str::slug($name->name);
+        static::creating(function ($category) {
+            $baseSlug = Str::slug($category->name);
             $slug = $baseSlug;
             $i = 1;
             while (static::where('slug', $slug)->exists()) {
                 $slug = $baseSlug . '-' . $i++;
             }
-            $name->slug = $slug;
+            $category->slug = $slug;
         });
     }
 
-    public function category()
+    public function names()
     {
-        return $this->belongsTo(NameCategory::class, 'name_category_id');
-    }
-    
-    public function getRouteKeyName()
-    {
-        return 'slug';
+        return $this->hasMany(Name::class);
     }
 }
