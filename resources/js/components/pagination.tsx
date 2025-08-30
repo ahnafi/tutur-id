@@ -108,8 +108,8 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
     if (data.last_page <= 1) return null;
 
     return (
-        <div className="flex items-center justify-between">
-            <div className="text-sm text-amber-600">
+        <div className="very-small-font-size flex flex-col-reverse items-center justify-between gap-2 md:flex-row md:gap-0">
+            <div className="text-amber-600">
                 Menampilkan {data.from} - {data.to} dari {data.total} hasil
             </div>
 
@@ -120,9 +120,9 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
                     size="sm"
                     onClick={() => handlePageChange(data.prev_page_url)}
                     disabled={!data.prev_page_url}
-                    className="border-amber-300 text-amber-700 hover:bg-amber-50 disabled:opacity-50"
+                    className="very-small-font-size border-amber-300 text-amber-700 hover:bg-amber-50 disabled:opacity-50"
                 >
-                    <ChevronLeft className="mr-1 h-4 w-4" />
+                    <ChevronLeft className="mr-1 h-4 w-4 hidden md:block" />
                     Sebelumnya
                 </Button>
 
@@ -135,10 +135,10 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
                     size="sm"
                     onClick={() => handlePageChange(data.next_page_url)}
                     disabled={!data.next_page_url}
-                    className="border-amber-300 text-amber-700 hover:bg-amber-50 disabled:opacity-50"
+                    className="very-small-font-size border-amber-300 text-amber-700 hover:bg-amber-50 disabled:opacity-50"
                 >
                     Selanjutnya
-                    <ChevronRight className="ml-1 h-4 w-4" />
+                    <ChevronRight className="ml-1 h-4 w-4 hidden md:block" />
                 </Button>
             </div>
         </div>

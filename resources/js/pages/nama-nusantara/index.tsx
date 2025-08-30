@@ -1,17 +1,22 @@
 'use client';
 
+import { GeneratedName, generateNameFromAI } from '@/api/gpt';
 import { Pagination } from '@/components/pagination';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Toaster } from '@/components/ui/toaster';
 import Layout from '@/layouts/layout';
 import { Name, PaginatedData } from '@/types';
 import { Head, router } from '@inertiajs/react';
+import axios from 'axios';
 import { debounce } from 'lodash';
-import { Eye, Heart, MapPin, Search, Shuffle, Sparkles, X } from 'lucide-react';
+import { Bot, Eye, Loader2, MapPin, Search, Sparkles, Upload, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 interface NamaNusantaraPageProps {
     names: PaginatedData<Name>;
@@ -20,12 +25,32 @@ interface NamaNusantaraPageProps {
     totalNames: number;
 }
 
+const NAME_CATEGORIES = [
+    'Tradisional',
+    'Modern',
+    'Unik',
+    'Alkitabiah',
+    'Mitologis',
+    'Terinspirasi Alam',
+    'Berbasis Kebajikan',
+    'Budaya',
+    'Sejarah',
+    'Terinspirasi Selebriti',
+];
+
 export default function NamaNusantaraPage({ names, trendingNames, searchQuery, totalNames }: NamaNusantaraPageProps) {
     const [query, setQuery] = useState(searchQuery);
     const [favorites, setFavorites] = useState<number[]>([]);
     const [selectedName, setSelectedName] = useState<Name | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [randomName, setRandomName] = useState<Name | null>(null);
+
+    // AI Generation states
+    const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
+    const [characteristics, setCharacteristics] = useState('');
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [generatedName, setGeneratedName] = useState<GeneratedName | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
 
     // Debounced search function
     const debouncedSearch = useCallback(
@@ -102,9 +127,59 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
         );
     };
 
+    const handleGenerateName = async () => {
+        if (!characteristics.trim()) {
+            toast.warning('Mohon masukkan karakteristik nama yang diinginkan');
+            return;
+        }
+
+        setIsGenerating(true);
+        try {
+            const result = await generateNameFromAI(characteristics);
+            setGeneratedName(result);
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : 'Gagal menghasilkan nama');
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+    const handleUploadName = async () => {
+        if (!generatedName) return;
+
+        setIsUploading(true);
+        try {
+            const response = await axios.post('/nama-nusantara', generatedName);
+
+            if (response.data.success) {
+                toast.success('Nama berhasil diunggah ke database!');
+                setIsAIDialogOpen(false);
+                setGeneratedName(null);
+                setCharacteristics('');
+
+                // Refresh page to show new name
+                router.reload();
+            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            const message = error.response?.data?.message || 'Gagal mengunggah nama';
+            toast.error(message);
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const resetAIDialog = () => {
+        setGeneratedName(null);
+        setCharacteristics('');
+        setIsGenerating(false);
+        setIsUploading(false);
+    };
+
     return (
         <Layout>
             <Head title="Nama Nusantara" />
+            <Toaster />
 
             <div className="section-padding-x min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
                 <div className="container max-w-screen-xl py-8">
@@ -130,7 +205,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="flex gap-2">
+                                    <div className="flex flex-wrap gap-2">
                                         <Input
                                             placeholder="Contoh: Arjuna, Dewi, Bayu..."
                                             value={query}
@@ -180,14 +255,6 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                                             >
                                                                 Lihat Detail
                                                             </Button>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                onClick={() => toggleFavorite(name.id)}
-                                                                className="text-red-500 hover:text-red-50"
-                                                            >
-                                                                <Heart className={`h-4 w-4 ${favorites.includes(name.id) ? 'fill-current' : ''}`} />
-                                                            </Button>
                                                         </div>
                                                     </div>
                                                     <p className="mb-3 text-amber-800">{name.meaning}</p>
@@ -219,14 +286,31 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
 
                         {/* Sidebar */}
                         <div className="space-y-6">
-                            {/* Random Name Generator */}
+                            {/* AI Name Generator */}
                             <Card className="border-amber-200 shadow-lg">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-amber-900">
+                                        <Bot className="h-5 w-5" />
+                                        Inspirasi Nama AI
+                                    </CardTitle>
+                                    <CardDescription>Dapatkan nama tradisional berdasarkan karakteristik yang Anda inginkan</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <Button onClick={() => setIsAIDialogOpen(true)} className="w-full bg-purple-600 hover:bg-purple-700">
+                                        <Sparkles className="mr-2 h-4 w-4" />
+                                        Temukan Inspirasi
+                                    </Button>
+                                </CardContent>
+                            </Card>
+
+                            {/* Random Name Generator */}
+                            {/* <Card className="border-amber-200 shadow-lg">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2 text-amber-900">
                                         <Shuffle className="h-5 w-5" />
                                         Nama Acak
                                     </CardTitle>
-                                    <CardDescription>Temukan inspirasi nama tradisional secara acak</CardDescription>
+                                    <CardDescription>Temukan nama tradisional secara acak</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <Button onClick={generateRandomName} className="mb-4 w-full bg-green-600 hover:bg-green-700">
@@ -247,14 +331,6 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                                     >
                                                         <Eye className="h-4 w-4" />
                                                     </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => toggleFavorite(randomName.id)}
-                                                        className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
-                                                    >
-                                                        <Heart className={`h-4 w-4 ${favorites.includes(randomName.id) ? 'fill-current' : ''}`} />
-                                                    </Button>
                                                 </div>
                                             </div>
                                             <p className="mb-2 text-sm text-amber-800">{randomName.meaning}</p>
@@ -272,7 +348,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                         </div>
                                     )}
                                 </CardContent>
-                            </Card>
+                            </Card> */}
 
                             {/* Trending Names */}
                             <Card className="border-amber-200 shadow-lg">
@@ -353,12 +429,6 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                     <MapPin className="h-4 w-4" />
                                     {selectedName.origin}
                                 </div>
-                                {selectedName.views > 0 && (
-                                    <div className="flex items-center gap-1">
-                                        <Eye className="h-4 w-4" />
-                                        {selectedName.views} views
-                                    </div>
-                                )}
                                 {selectedName.category && (
                                     <Badge variant="outline" className="border-amber-300 text-amber-700">
                                         {selectedName.category.name}
@@ -377,23 +447,133 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                     <p className="leading-relaxed text-amber-800">{selectedName.description}</p>
                                 </div>
                             )}
-
-                            <div className="flex gap-3 pt-4">
-                                <Button
-                                    onClick={() => toggleFavorite(selectedName.id)}
-                                    variant={favorites.includes(selectedName.id) ? 'default' : 'outline'}
-                                    className={
-                                        favorites.includes(selectedName.id)
-                                            ? 'bg-red-500 hover:bg-red-600'
-                                            : 'border-red-300 text-red-600 hover:bg-red-50'
-                                    }
-                                >
-                                    <Heart className={`mr-2 h-4 w-4 ${favorites.includes(selectedName.id) ? 'fill-current' : ''}`} />
-                                    {favorites.includes(selectedName.id) ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}
-                                </Button>
-                            </div>
                         </div>
                     )}
+                </DialogContent>
+            </Dialog>
+
+            {/* AI Name Generator Dialog */}
+            <Dialog
+                open={isAIDialogOpen}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setIsAIDialogOpen(false);
+                        resetAIDialog();
+                    }
+                }}
+            >
+                <DialogContent className="max-w-3xl [&>button]:hidden">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center justify-between text-base md:text-2xl text-purple-900">
+                            <div className="flex items-center gap-2">
+                                <Bot className="h-6 w-6" />
+                                Temukan Inspirasi Nama
+                            </div>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                    setIsAIDialogOpen(false);
+                                    resetAIDialog();
+                                }}
+                                className="text-purple-600 hover:text-purple-700 hover:text-amber-50"
+                            >
+                                <X className="h-4 w-4" />
+                            </Button>
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <div className="space-y-6">
+                        {!generatedName ? (
+                            <>
+                                <div>
+                                    <label className="mb-2 block text-sm font-medium text-purple-900">Karakteristik nama yang diinginkan</label>
+                                    <Textarea
+                                        placeholder="Contoh: nama yang berkaitan dengan alam dan kekuatan mistis, nama yang melambangkan keberanian dan kebijaksanaan, dll..."
+                                        value={characteristics}
+                                        onChange={(e) => setCharacteristics(e.target.value)}
+                                        className="border-purple-200 focus:border-purple-400 text-sm md:text-base"
+                                        rows={4}
+                                    />
+                                </div>
+
+                                <Button
+                                    onClick={handleGenerateName}
+                                    disabled={isGenerating || !characteristics.trim()}
+                                    className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
+                                >
+                                    {isGenerating ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Menghasilkan nama...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Sparkles className="mr-2 h-4 w-4" />
+                                            Generate Nama
+                                        </>
+                                    )}
+                                </Button>
+                            </>
+                        ) : (
+                            <div className="space-y-6">
+                                <div className="rounded-lg border border-purple-200 bg-purple-50 p-6">
+                                    <div className="mb-4 flex items-start justify-between">
+                                        <h3 className="text-2xl font-bold text-purple-900">{generatedName.name}</h3>
+                                        <Badge variant="outline" className="border-purple-300 text-purple-700">
+                                            {NAME_CATEGORIES[generatedName.name_category_id - 1]}
+                                        </Badge>
+                                    </div>
+
+                                    <div className="mb-3 flex items-center gap-2 text-sm text-purple-600">
+                                        <MapPin className="h-4 w-4" />
+                                        {generatedName.origin}
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <h4 className="mb-2 font-semibold text-purple-900">Arti Nama</h4>
+                                        <p className="text-purple-800">{generatedName.meaning}</p>
+                                    </div>
+
+                                    <div>
+                                        <h4 className="mb-2 font-semibold text-purple-900">Deskripsi</h4>
+                                        <p className="leading-relaxed text-purple-800">{generatedName.description}</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-3">
+                                    <Button
+                                        onClick={handleUploadName}
+                                        disabled={isUploading}
+                                        className="bg-green-600 hover:bg-green-700 disabled:opacity-50"
+                                    >
+                                        {isUploading ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                Mengunggah...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Upload className="mr-2 h-4 w-4" />
+                                                Unggah Nama
+                                            </>
+                                        )}
+                                    </Button>
+
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                            setGeneratedName(null);
+                                            setCharacteristics('');
+                                        }}
+                                        className="border-purple-300 text-purple-700 hover:bg-purple-50"
+                                    >
+                                        Generate Lagi
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </DialogContent>
             </Dialog>
         </Layout>
