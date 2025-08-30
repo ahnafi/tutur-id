@@ -134,4 +134,8 @@
     .section-padding-x {
         @apply px-4 sm:px-4 xl:px-12;
     }
+
+    .very-small-font-size {
+        @apply text-xs md:text-sm;
+    }
 }
