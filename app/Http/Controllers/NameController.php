@@ -31,7 +31,7 @@ class NameController extends Controller
             ->limit(5)
             ->get();
         
-        return inertia('nama-nusantara/index', [
+        return inertia('names/index', [
             'names' => $names,
             'trendingNames' => $trendingNames,
             'searchQuery' => $request->name ?? '',

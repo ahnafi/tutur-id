@@ -11,13 +11,13 @@ class StoryCategory extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        "title",
+        "name",
         "slug",
     ];
 
-    public function setTitleAttribute($value): void
+    public function setNameAttribute($value): void
     {
-        $this->attributes['title'] = $value;
+        $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value) . '-' . Str::random(5);
     }
 

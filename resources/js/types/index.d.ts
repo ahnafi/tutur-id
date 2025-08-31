@@ -64,6 +64,34 @@ export interface Name {
     deleted_at: string | null;
 }
 
+export interface StoryCategory {
+    id: number;
+    name: string;
+    slug: string;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+}
+
+export interface Story {
+    id: number;
+    title: string;
+    slug: string;
+    content: string;
+    origin_place: string;
+    gmaps_link: string;
+    is_official: boolean;
+    created_by: number;
+    total_reads: number;
+    image: string | null;
+    story_category_id: number;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+    story_category?: StoryCategory;
+    creator?: User;
+}
+
 export interface PaginationLink {
     url: string | null;
     label: string;

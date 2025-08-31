@@ -20,6 +20,8 @@ class Story extends Model
         "gmaps_link",
         "is_official",
         "created_by",
+        'total_reads',
+        'image',
         "story_category_id",
     ];
 

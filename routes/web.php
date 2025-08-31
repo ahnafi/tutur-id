@@ -7,6 +7,11 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+// Cerita Routes
+Route::get('cerita', [\App\Http\Controllers\StoryController::class, 'index'])->name('stories.index');
+Route::get('cerita/{story}', [\App\Http\Controllers\StoryController::class, 'show'])->name('stories.show');
+
+// Nama Nusantara Routes
 Route::get('nama-nusantara', [\App\Http\Controllers\NameController::class, 'index'])->name('names.index');
 Route::get('nama-nusantara/{name}', [\App\Http\Controllers\NameController::class, 'show'])->name('names.show');
 

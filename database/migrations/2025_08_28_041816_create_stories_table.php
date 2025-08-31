@@ -20,6 +20,8 @@ return new class extends Migration {
             $table->boolean("is_official")->default(false);
             $table->unsignedBigInteger("created_by");
             $table->foreign("created_by")->references("id")->on("users")->onDelete("cascade");
+            $table->integer('total_reads')->default(0);
+            $table->string('image')->nullable();
             $table->foreignId("story_category_id")->constrained()->onDelete("cascade");
             $table->timestamps();
             $table->softDeletes();
