@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             StoryCategorySeeder::class,
             NameCategorySeeder::class,
             NamesSeeder::class,
-            StorySeeder::class
+            StorySeeder::class,
+            QuizzSeeder::class,
         ]);
     }
 }

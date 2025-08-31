@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string("option_b");
             $table->string("option_c");
             $table->string("option_d");
-            $table->enum("correct_answer", ['A', 'B', 'C', 'D']);
+            $table->string("correct_answer");
             $table->timestamps();
             $table->softDeletes();
         });

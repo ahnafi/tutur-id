@@ -10,7 +10,7 @@ class StoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Story::with(['storyCategory', 'creator']);
+        $query = Story::with(['storyCategory', 'creator', 'quizzes']);
 
         // Search functionality
         if ($request->has('search') && $request->search) {
@@ -94,13 +94,16 @@ class StoryController extends Controller
         ]);
     }
 
-    public function show(Story $story)
+    public function show($slug)
     {
+        // Manual lookup by slug instead of route model binding
+        $story = Story::where('slug', $slug)->firstOrFail();
+
         // Increment read count
         $story->increment('total_reads');
 
-        // Load relationships
-        $story->load(['storyCategory', 'creator']);
+        // Load relationships including quizzes
+        $story->load(['storyCategory', 'creator', 'quizzes']);
 
         // Get related stories (same category or region)
         $relatedStories = Story::with(['storyCategory', 'creator'])

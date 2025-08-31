@@ -73,6 +73,20 @@ export interface StoryCategory {
     deleted_at: string | null;
 }
 
+export interface Quiz {
+    id: number;
+    story_id: number;
+    question: string;
+    option_a: string;
+    option_b: string;
+    option_c: string;
+    option_d: string;
+    correct_answer: 'option_a' | 'option_b' | 'option_c' | 'option_d';
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+}
+
 export interface Story {
     id: number;
     title: string;
@@ -90,6 +104,7 @@ export interface Story {
     deleted_at: string | null;
     story_category?: StoryCategory;
     creator?: User;
+    quizzes?: Quiz[];
 }
 
 export interface PaginationLink {

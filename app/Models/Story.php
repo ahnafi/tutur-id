@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 class Story extends Model
 {
     use SoftDeletes;
+    
     protected $fillable = [
         "title",
         "slug",
@@ -25,10 +26,25 @@ class Story extends Model
         "story_category_id",
     ];
 
-    public function setTitleAttribute($value): void
+    protected static function booted(): void
     {
-        $this->attributes['title'] = $value;
-        $this->attributes['slug'] = Str::slug($value) . '-' . Str::random(5);
+        static::creating(function ($story) {
+            if (!$story->slug) {
+                $baseSlug = Str::slug($story->title);
+                $slug = $baseSlug;
+                $i = 1;
+                while (static::where('slug', $slug)->exists()) {
+                    $slug = $baseSlug . '-' . $i++;
+                }
+                $story->slug = $slug;
+            }
+        });
+    }
+
+    // Tambahkan method ini untuk route model binding dengan slug
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 
     public function storyCategory(): BelongsTo
