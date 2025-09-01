@@ -87,6 +87,16 @@ export interface Quiz {
     deleted_at: string | null;
 }
 
+export interface QuizResult {
+    id: number;
+    story_id: number;
+    user_id: number;
+    score: number;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+}
+
 export interface Story {
     id: number;
     title: string;

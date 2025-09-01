@@ -75,7 +75,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                             <div className="absolute bottom-6 left-6 text-white">
                                 <div className="mb-2 flex items-center gap-2">
-                                    {story.is_official && <Badge className="bg-primary/90">Cerita Resmi</Badge>}
+                                    {Boolean(story.is_official) && <Badge className="bg-primary/90">Cerita Resmi</Badge>}
                                     {story.story_category && <Badge variant="secondary">{story.story_category.name}</Badge>}
                                     <Badge variant="outline" className="border-white/30 bg-white/10 text-white">
                                         {story.origin_place}

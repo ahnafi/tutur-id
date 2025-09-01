@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class QuizzResultSeeder extends Seeder
+class QuizResultSeeder extends Seeder
 {
     /**
      * Run the database seeds.

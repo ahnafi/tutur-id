@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Story;
 use App\Models\StoryCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class StoryController extends Controller
 {
@@ -59,8 +61,8 @@ class StoryController extends Controller
                 break;
         }
 
-        // Paginate results (12 per page)
-        $stories = $query->paginate(12)->withQueryString();
+        // Paginate results (6 per page)
+        $stories = $query->paginate(6)->withQueryString();
 
         // Get available regions for filter
         $regions = Story::select('origin_place')
@@ -118,6 +120,127 @@ class StoryController extends Controller
         return inertia('stories/show', [
             'story' => $story,
             'relatedStories' => $relatedStories
+        ]);
+    }
+
+    // Method untuk halaman kontribusi
+    public function create()
+    {
+        $categories = StoryCategory::orderBy('name')->get();
+
+        $regions = [
+            "Aceh",
+            "Sumatera Utara",
+            "Sumatera Barat",
+            "Riau",
+            "Kepulauan Riau",
+            "Jambi",
+            "Sumatera Selatan",
+            "Bangka Belitung",
+            "Bengkulu",
+            "Lampung",
+            "DKI Jakarta",
+            "Jawa Barat",
+            "Jawa Tengah",
+            "DI Yogyakarta",
+            "Jawa Timur",
+            "Banten",
+            "Bali",
+            "Nusa Tenggara Barat",
+            "Nusa Tenggara Timur",
+            "Kalimantan Barat",
+            "Kalimantan Tengah",
+            "Kalimantan Selatan",
+            "Kalimantan Timur",
+            "Kalimantan Utara",
+            "Sulawesi Utara",
+            "Sulawesi Tengah",
+            "Sulawesi Selatan",
+            "Sulawesi Tenggara",
+            "Gorontalo",
+            "Sulawesi Barat",
+            "Maluku",
+            "Maluku Utara",
+            "Papua",
+            "Papua Barat",
+            "Papua Selatan",
+            "Papua Tengah",
+            "Papua Pegunungan"
+        ];
+
+        return inertia('stories/create', [
+            'categories' => $categories,
+            'regions' => $regions
+        ]);
+    }
+
+    // Method untuk menyimpan kontribusi
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string|min:100',
+            'origin_place' => 'required|string',
+            'story_category_id' => 'nullable|exists:story_categories,id',
+            'gmaps_link' => 'nullable|url',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'title.required' => 'Judul cerita wajib diisi.',
+            'title.max' => 'Judul maksimal 255 karakter.',
+            'content.required' => 'Isi cerita wajib diisi.',
+            'content.min' => 'Isi cerita minimal 100 karakter.',
+            'origin_place.required' => 'Asal daerah cerita wajib diisi.',
+            'story_category_id.exists' => 'Kategori cerita tidak valid.',
+            'gmaps_link.url' => 'Link Google Maps harus berupa URL yang valid.',
+            'image.image' => 'File yang diunggah harus berupa gambar.',
+            'image.mimes' => 'Gambar harus berformat jpeg, png, jpg, atau gif.',
+            'image.max' => 'Ukuran gambar maksimal 2MB.'
+        ]);
+
+        $imagePath = null;
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $fileName = 'indonesian-folklore-' . Str::slug($request->title) . '-community.' . $image->getClientOriginalExtension();
+
+            // Store in storage/app/public/story-images directory using the public disk
+            $imagePath = '/story-images/' . $fileName;
+            $image->storeAs('story-images', $fileName, 'public');
+        }
+
+        // Determine if user is admin to set is_official
+        $isOfficial = Auth::check() && Auth::user()->hasRole('admin') ? 1 : 0;
+
+        $story = Story::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'origin_place' => $request->origin_place,
+            'story_category_id' => $request->story_category_id,
+            'gmaps_link' => $request->gmaps_link,
+            'image' => $imagePath,
+            'created_by' => Auth::id(),
+            'is_official' => $isOfficial,
+            'total_reads' => 0
+        ]);
+
+        return redirect()->route('stories.show', $story->slug)->with('success', 'Cerita berhasil dikirim! Terima kasih atas kontribusinya.');
+    }
+
+    // Method untuk melihat kontribusi user sendiri
+    public function myContributions()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $stories = Story::where('created_by', Auth::id())
+            ->with('storyCategory')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return inertia('stories/my-contributions', [
+            'stories' => $stories
         ]);
     }
 }

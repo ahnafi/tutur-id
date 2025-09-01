@@ -20,6 +20,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
     Route::post('nama-nusantara', [\App\Http\Controllers\NameController::class, 'store'])->name('names.store');
+
+    // Kontribusi Cerita Routes
+    Route::get('kontribusi', [\App\Http\Controllers\StoryController::class, 'create'])->name('stories.create');
+    Route::post('kontribusi', [\App\Http\Controllers\StoryController::class, 'store'])->name('stories.store');
+
+    // Quiz Routes
+    Route::get('cerita/{story}/kuis', [\App\Http\Controllers\QuizController::class, 'show'])->name('stories.quiz');
+    Route::post('cerita/{story}/kuis', [\App\Http\Controllers\QuizController::class, 'submit'])->name('stories.quiz.submit');
+
+    // Protected story routes
+    Route::get('kontribusi-saya', [\App\Http\Controllers\StoryController::class, 'myContributions'])->name('stories.my-contributions');
 });
 
 require __DIR__ . '/settings.php';

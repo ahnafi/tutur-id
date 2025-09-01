@@ -2,12 +2,17 @@
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Link } from '@inertiajs/react';
-import { BookOpen, Menu, Search, Trophy } from 'lucide-react';
+import { User } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import { BookOpen, LogOut, Menu, Search, Trophy, User as UserIcon } from 'lucide-react';
 import { useState } from 'react';
 
 export function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
+
+    // Get user from inertia props
+    const { props } = usePage<{ auth: { user?: User } }>();
+    const user = props.auth?.user;
 
     const navItems = [
         { href: '/', label: 'Beranda', icon: BookOpen },
@@ -17,8 +22,8 @@ export function Navigation() {
     ];
 
     return (
-        <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 section-padding-x">
-            <div className="container flex h-16 items-center justify-between max-w-screen-xl mx-auto">
+        <nav className="section-padding-x sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container mx-auto flex h-16 max-w-screen-xl items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center space-x-2">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80">
@@ -41,14 +46,33 @@ export function Navigation() {
                     ))}
                 </div>
 
-                {/* Auth Buttons */}
+                {/* Auth Buttons - Desktop */}
                 <div className="hidden items-center space-x-2 md:flex">
-                    <Button variant="ghost" asChild>
-                        <Link href="/login">Masuk</Link>
-                    </Button>
-                    <Button asChild>
-                        <Link href="/register">Daftar</Link>
-                    </Button>
+                    {user ? (
+                        <>
+                            <Button variant="ghost" asChild>
+                                <Link href="/profile" className="flex items-center space-x-2">
+                                    <UserIcon className="h-4 w-4" />
+                                    <span>Halo, {user.name}</span>
+                                </Link>
+                            </Button>
+                            <Button variant="ghost" asChild>
+                                <Link href="/logout" method="post" as="button" className="flex items-center space-x-2">
+                                    <LogOut className="h-4 w-4" />
+                                    <span>Keluar</span>
+                                </Link>
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Button variant="ghost" asChild>
+                                <Link href="/login">Masuk</Link>
+                            </Button>
+                            <Button asChild>
+                                <Link href="/register">Daftar</Link>
+                            </Button>
+                        </>
+                    )}
                 </div>
 
                 {/* Mobile Menu */}
@@ -60,6 +84,15 @@ export function Navigation() {
                     </SheetTrigger>
                     <SheetContent side="right" className="w-80">
                         <div className="mt-8 flex flex-col space-y-4">
+                            {/* User info for mobile */}
+                            {user && (
+                                <div className="border-b pb-4">
+                                    <p className="text-sm text-muted-foreground">Selamat datang,</p>
+                                    <p className="font-medium">{user.name}</p>
+                                </div>
+                            )}
+
+                            {/* Navigation items */}
                             {navItems.map((item) => (
                                 <Link
                                     key={item.href}
@@ -71,17 +104,38 @@ export function Navigation() {
                                     <span>{item.label}</span>
                                 </Link>
                             ))}
+
+                            {/* Auth buttons for mobile */}
                             <div className="space-y-2 border-t pt-4">
-                                <Button variant="ghost" className="w-full justify-start" asChild>
-                                    <Link href="/login" onClick={() => setIsOpen(false)}>
-                                        Masuk
-                                    </Link>
-                                </Button>
-                                <Button className="w-full" asChild>
-                                    <Link href="/register" onClick={() => setIsOpen(false)}>
-                                        Daftar
-                                    </Link>
-                                </Button>
+                                {user ? (
+                                    <>
+                                        <Button variant="ghost" className="w-full justify-start" asChild>
+                                            <Link href="/profile" onClick={() => setIsOpen(false)}>
+                                                <UserIcon className="mr-2 h-4 w-4" />
+                                                Profile
+                                            </Link>
+                                        </Button>
+                                        <Button variant="ghost" className="w-full justify-start" asChild>
+                                            <Link href="/logout" method="post" as="button" onClick={() => setIsOpen(false)}>
+                                                <LogOut className="mr-2 h-4 w-4" />
+                                                Keluar
+                                            </Link>
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Button variant="ghost" className="w-full justify-start" asChild>
+                                            <Link href="/login" onClick={() => setIsOpen(false)}>
+                                                Masuk
+                                            </Link>
+                                        </Button>
+                                        <Button className="w-full" asChild>
+                                            <Link href="/register" onClick={() => setIsOpen(false)}>
+                                                Daftar
+                                            </Link>
+                                        </Button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </SheetContent>
