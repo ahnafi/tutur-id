@@ -104,8 +104,8 @@ class StoryController extends Controller
         // Increment read count
         $story->increment('total_reads');
 
-        // Load relationships including quizzes
-        $story->load(['storyCategory', 'creator', 'quizzes']);
+        // Load relationships including quizzes and comments
+        $story->load(['storyCategory', 'creator', 'quizzes', 'comments']);
 
         // Get related stories (same category or region)
         $relatedStories = Story::with(['storyCategory', 'creator'])

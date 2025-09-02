@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -41,7 +40,6 @@ class Story extends Model
         });
     }
 
-    // Tambahkan method ini untuk route model binding dengan slug
     public function getRouteKeyName()
     {
         return 'slug';
@@ -65,5 +63,20 @@ class Story extends Model
     public function quizresult(): HasMany
     {
         return $this->hasMany(QuizResult::class);
+    }
+
+    // Add comments relationship
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class)
+            ->whereNull('parent_id')
+            ->where('is_approved', true)
+            ->with(['user', 'replies'])
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function allComments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 }

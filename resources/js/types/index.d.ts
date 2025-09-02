@@ -97,6 +97,22 @@ export interface QuizResult {
     deleted_at: string | null;
 }
 
+// Add to types/index.d.ts
+export interface Comment {
+    id: number;
+    content: string;
+    story_id: number;
+    user_id: number;
+    parent_id: number | null;
+    is_approved: boolean;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+    user: User;
+    replies?: Comment[];
+}
+
+// Update Story interface
 export interface Story {
     id: number;
     title: string;
@@ -115,6 +131,7 @@ export interface Story {
     story_category?: StoryCategory;
     creator?: User;
     quizzes?: Quiz[];
+    comments?: Comment[];
 }
 
 export interface PaginationLink {

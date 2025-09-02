@@ -29,6 +29,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('cerita/{story}/kuis', [\App\Http\Controllers\QuizController::class, 'show'])->name('stories.quiz');
     Route::post('cerita/{story}/kuis', [\App\Http\Controllers\QuizController::class, 'submit'])->name('stories.quiz.submit');
 
+    // Comment Routes
+    Route::post('cerita/{story}/komentar', [\App\Http\Controllers\CommentController::class, 'store'])->name('comments.store');
+    Route::put('komentar/{comment}', [\App\Http\Controllers\CommentController::class, 'update'])->name('comments.update');
+    Route::delete('komentar/{comment}', [\App\Http\Controllers\CommentController::class, 'destroy'])->name('comments.destroy');
+
     // Protected story routes
     Route::get('kontribusi-saya', [\App\Http\Controllers\StoryController::class, 'myContributions'])->name('stories.my-contributions');
 });

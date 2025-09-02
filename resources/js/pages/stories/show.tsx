@@ -1,13 +1,48 @@
 'use client';
 
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import { Toaster } from '@/components/ui/toaster';
 import Layout from '@/layouts/layout';
-import { Story } from '@/types';
-import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, BookOpen, Clock, ExternalLink, Eye, MapPin, Play, Share2, Users } from 'lucide-react';
+import { Comment, Story, User } from '@/types';
+import { Head, Link, usePage } from '@inertiajs/react';
+import axios from 'axios';
+import {
+    AlertCircle,
+    ArrowLeft,
+    BookOpen,
+    Clock,
+    Edit3,
+    ExternalLink,
+    Eye,
+    Loader2,
+    MapPin,
+    MessageCircle,
+    Play,
+    Reply,
+    Send,
+    Share2,
+    Trash2,
+    Users,
+} from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
 
 interface StoryDetailPageProps {
     story: Story;
@@ -15,7 +50,17 @@ interface StoryDetailPageProps {
 }
 
 export default function StoryDetailPage({ story, relatedStories }: StoryDetailPageProps) {
-    // const [isFavorited, setIsFavorited] = useState(false);
+    const { props } = usePage<{ auth: { user?: User } }>();
+    const user = props.auth?.user;
+
+    const [comments, setComments] = useState<Comment[]>(story.comments || []);
+    const [newComment, setNewComment] = useState('');
+    const [replyTo, setReplyTo] = useState<number | null>(null);
+    const [replyContent, setReplyContent] = useState('');
+    const [editingComment, setEditingComment] = useState<number | null>(null);
+    const [editContent, setEditContent] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+    const [deletingComment, setDeletingComment] = useState<number | null>(null);
 
     const getReadTime = (content: string) => {
         const wordsPerMinute = 200;
@@ -32,6 +77,29 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
         });
     };
 
+    const formatCommentDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now.getTime() - date.getTime();
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffHours < 1) {
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+            return `${diffMins} menit yang lalu`;
+        } else if (diffHours < 24) {
+            return `${diffHours} jam yang lalu`;
+        } else if (diffDays < 7) {
+            return `${diffDays} hari yang lalu`;
+        } else {
+            return date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+            });
+        }
+    };
+
     const handleShare = async () => {
         if (navigator.share) {
             try {
@@ -41,17 +109,344 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                     url: window.location.href,
                 });
             } catch (error) {
-                console.log('Error sharing:', error);
+                toast.error('Error sharing: ' + error);
             }
         } else {
-            // Fallback: copy to clipboard
             navigator.clipboard.writeText(window.location.href);
-            alert('Link berhasil disalin ke clipboard!');
+            toast.success('Link berhasil disalin ke clipboard!');
         }
     };
 
+    const submitComment = async () => {
+        if (!newComment.trim()) return;
+
+        setSubmitting(true);
+        try {
+            const response = await axios.post(`/cerita/${story.slug}/komentar`, {
+                content: newComment,
+            });
+
+            if (response.data.success) {
+                const newCommentData = response.data.comment;
+                setComments([newCommentData, ...comments]);
+                setNewComment('');
+                toast.success('Komentar berhasil ditambahkan!');
+            }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat menambah komentar';
+            toast.error(errorMessage);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const submitReply = async (parentId: number) => {
+        if (!replyContent.trim()) return;
+
+        setSubmitting(true);
+        try {
+            const response = await axios.post(`/cerita/${story.slug}/komentar`, {
+                content: replyContent,
+                parent_id: parentId,
+            });
+
+            if (response.data.success) {
+                // Add reply to the parent comment dynamically
+                const newReply = response.data.comment;
+
+                const updateCommentsWithReply = (comments: Comment[]): Comment[] => {
+                    return comments.map((comment) => {
+                        if (comment.id === parentId) {
+                            return {
+                                ...comment,
+                                replies: [...(comment.replies || []), newReply],
+                            };
+                        } else if (comment.replies && comment.replies.length > 0) {
+                            return {
+                                ...comment,
+                                replies: updateCommentsWithReply(comment.replies),
+                            };
+                        }
+                        return comment;
+                    });
+                };
+
+                setComments(updateCommentsWithReply(comments));
+                setReplyTo(null);
+                setReplyContent('');
+                toast.success('Balasan berhasil ditambahkan!');
+            }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat menambah balasan';
+            toast.error(errorMessage);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const deleteComment = async (commentId: number) => {
+        setDeletingComment(commentId);
+        try {
+            const response = await axios.delete(`/komentar/${commentId}`);
+            if (response.data.success) {
+                // Remove comment dynamically
+                const removeCommentFromList = (comments: Comment[]): Comment[] => {
+                    return comments.filter((comment) => {
+                        if (comment.id === commentId) {
+                            return false;
+                        }
+                        if (comment.replies && comment.replies.length > 0) {
+                            comment.replies = removeCommentFromList(comment.replies);
+                        }
+                        return true;
+                    });
+                };
+
+                setComments(removeCommentFromList(comments));
+                toast.success('Komentar berhasil dihapus!');
+            }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat menghapus komentar';
+            toast.error(errorMessage);
+        } finally {
+            setDeletingComment(null);
+        }
+    };
+
+    const updateComment = async (commentId: number) => {
+        if (!editContent.trim()) return;
+
+        try {
+            const response = await axios.put(`/komentar/${commentId}`, {
+                content: editContent,
+            });
+
+            if (response.data.success) {
+                // Update comment dynamically
+                const updateCommentInList = (comments: Comment[]): Comment[] => {
+                    return comments.map((comment) => {
+                        if (comment.id === commentId) {
+                            return {
+                                ...comment,
+                                content: editContent,
+                                updated_at: new Date().toISOString(),
+                            };
+                        } else if (comment.replies && comment.replies.length > 0) {
+                            return {
+                                ...comment,
+                                replies: updateCommentInList(comment.replies),
+                            };
+                        }
+                        return comment;
+                    });
+                };
+
+                setComments(updateCommentInList(comments));
+                setEditingComment(null);
+                setEditContent('');
+                toast.success('Komentar berhasil diperbarui!');
+            }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat mengupdate komentar';
+            toast.error(errorMessage);
+        }
+    };
+
+    const renderComment = useCallback(
+        (comment: Comment, depth: number = 0) => (
+            <div key={comment.id} className={`${depth > 0 ? 'ml-8 border-l-2 border-gray-200 pl-4' : ''}`}>
+                <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.user.name}`} />
+                            <AvatarFallback>{comment.user.name.charAt(0).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 space-y-2">
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium">{comment.user.name}</span>
+                                <span className="text-xs text-muted-foreground">{formatCommentDate(comment.created_at)}</span>
+                                {comment.updated_at !== comment.created_at && <span className="text-xs text-muted-foreground italic">(diedit)</span>}
+                            </div>
+
+                            {editingComment === comment.id ? (
+                                <div className="space-y-2">
+                                    <Textarea
+                                        value={editContent}
+                                        onChange={(e) => setEditContent(e.target.value)}
+                                        placeholder="Edit komentar..."
+                                        className="min-h-[80px]"
+                                    />
+                                    <div className="flex gap-2">
+                                        <Button
+                                            size="sm"
+                                            onClick={() => updateComment(comment.id)}
+                                            disabled={!editContent.trim() || editContent.length > 1000}
+                                        >
+                                            Simpan
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => {
+                                                setEditingComment(null);
+                                                setEditContent('');
+                                            }}
+                                        >
+                                            Batal
+                                        </Button>
+                                    </div>
+                                    <div className="text-xs text-muted-foreground">{editContent.length}/1000 karakter</div>
+                                </div>
+                            ) : (
+                                <>
+                                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{comment.content}</p>
+
+                                    <div className="flex items-center gap-3">
+                                        {user && (
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => {
+                                                    setReplyTo(comment.id);
+                                                    setReplyContent('');
+                                                }}
+                                                className="h-auto p-0 py-1 text-xs text-muted-foreground hover:text-primary"
+                                            >
+                                                <Reply className="mr-1 h-3 w-3" />
+                                                Balas
+                                            </Button>
+                                        )}
+
+                                        {user && comment.user_id === user.id && (
+                                            <>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => {
+                                                        setEditingComment(comment.id);
+                                                        setEditContent(comment.content);
+                                                    }}
+                                                    className="h-auto p-0 py-1 text-xs text-muted-foreground hover:text-primary"
+                                                >
+                                                    <Edit3 className="mr-1 h-3 w-3" />
+                                                    Edit
+                                                </Button>
+
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="h-auto p-0 py-1 text-xs text-red-600 hover:text-red-700"
+                                                            disabled={deletingComment === comment.id}
+                                                        >
+                                                            {deletingComment === comment.id ? (
+                                                                <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                                                            ) : (
+                                                                <Trash2 className="mr-1 h-3 w-3" />
+                                                            )}
+                                                            Hapus
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>Hapus Komentar</AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                Apakah Anda yakin ingin menghapus komentar ini? Tindakan ini tidak dapat dibatalkan.
+                                                                {comment.replies && comment.replies.length > 0 && (
+                                                                    <span className="mt-2 block text-red-600">
+                                                                        Komentar ini memiliki {comment.replies.length} balasan yang juga akan ikut
+                                                                        terhapus.
+                                                                    </span>
+                                                                )}
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Batal</AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                onClick={() => deleteComment(comment.id)}
+                                                                className="bg-red-600 hover:bg-red-700"
+                                                            >
+                                                                Hapus Komentar
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    {replyTo === comment.id && (
+                                        <div className="mt-3 space-y-2">
+                                            <Textarea
+                                                value={replyContent}
+                                                onChange={(e) => setReplyContent(e.target.value)}
+                                                placeholder={`Balas komentar ${comment.user.name}...`}
+                                                className="min-h-[80px]"
+                                            />
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs text-muted-foreground">{replyContent.length}/1000 karakter</span>
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        onClick={() => submitReply(comment.id)}
+                                                        disabled={submitting || !replyContent.trim() || replyContent.length > 1000}
+                                                    >
+                                                        {submitting ? (
+                                                            <>
+                                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                                Mengirim...
+                                                            </>
+                                                        ) : (
+                                                            'Kirim Balasan'
+                                                        )}
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={() => {
+                                                            setReplyTo(null);
+                                                            setReplyContent('');
+                                                        }}
+                                                    >
+                                                        Batal
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Render replies */}
+                    {comment.replies && comment.replies.length > 0 && (
+                        <div className="mt-4 space-y-4">{comment.replies.map((reply) => renderComment(reply, depth + 1))}</div>
+                    )}
+                </div>
+            </div>
+        ),
+        [comments, editingComment, editContent, replyTo, replyContent, submitting, deletingComment, user],
+    );
+
+    // Calculate total comments including replies
+    const getTotalCommentCount = (comments: Comment[]): number => {
+        return comments.reduce((total, comment) => {
+            return total + 1 + (comment.replies ? getTotalCommentCount(comment.replies) : 0);
+        }, 0);
+    };
+
+    const totalComments = getTotalCommentCount(comments);
+
     return (
         <Layout>
+            <Toaster />
+
             <Head title={`${story.title} - Cerita Rakyat Nusantara`} />
 
             <div className="section-padding-x py-4 md:py-8">
@@ -91,6 +486,10 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                         <Eye className="h-4 w-4" />
                                         <span>{story.total_reads} pembaca</span>
                                     </div>
+                                    <div className="flex items-center gap-1">
+                                        <MessageCircle className="h-4 w-4" />
+                                        <span>{totalComments} komentar</span>
+                                    </div>
                                     {!story.is_official && story.creator && (
                                         <div className="flex items-center gap-1">
                                             <Users className="h-4 w-4" />
@@ -111,27 +510,17 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                     </Link>
                                 </Button>
                             )}
-                            {/* <Button variant="outline">
-                            <Volume2 className="mr-2 h-4 w-4" />
-                            Dengarkan Audio
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => setIsFavorited(!isFavorited)}
-                            className={isFavorited ? 'text-red-500 hover:text-red-600' : ''}
-                        >
-                            <Heart className={`h-4 w-4 ${isFavorited ? 'fill-current' : ''}`} />
-                        </Button> */}
                             <Button variant="outline" size="icon" onClick={handleShare}>
                                 <Share2 className="h-4 w-4" />
                             </Button>
-                            <Button variant="outline" asChild>
-                                <a href={story.gmaps_link} target="_blank">
-                                    <ExternalLink className="mr-2 h-4 w-4" />
-                                    Lihat Lokasi
-                                </a>
-                            </Button>
+                            {story.gmaps_link && (
+                                <Button variant="outline" asChild>
+                                    <a href={story.gmaps_link} target="_blank">
+                                        <ExternalLink className="mr-2 h-4 w-4" />
+                                        Lihat Lokasi
+                                    </a>
+                                </Button>
+                            )}
                         </div>
                     </div>
 
@@ -174,6 +563,84 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                     </CardContent>
                                 </Card>
                             )}
+
+                            {/* Comments Section */}
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <MessageCircle className="h-5 w-5" />
+                                        Komentar ({totalComments})
+                                    </CardTitle>
+                                    <CardDescription>Bagikan pemikiran Anda tentang cerita ini</CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                    {/* Comment Form */}
+                                    {user ? (
+                                        <div className="space-y-4">
+                                            <div className="flex items-start gap-3">
+                                                <Avatar className="h-8 w-8">
+                                                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} />
+                                                    <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
+                                                </Avatar>
+                                                <div className="flex-1 space-y-3">
+                                                    <Textarea
+                                                        value={newComment}
+                                                        onChange={(e) => setNewComment(e.target.value)}
+                                                        placeholder="Tulis komentar Anda tentang cerita ini..."
+                                                        className="min-h-[100px]"
+                                                    />
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-xs text-muted-foreground">{newComment.length}/1000 karakter</span>
+                                                        <Button
+                                                            onClick={submitComment}
+                                                            disabled={submitting || !newComment.trim() || newComment.length > 1000}
+                                                            size="sm"
+                                                        >
+                                                            {submitting ? (
+                                                                <>
+                                                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                                    Mengirim...
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <Send className="mr-2 h-4 w-4" />
+                                                                    Kirim Komentar
+                                                                </>
+                                                            )}
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <Alert>
+                                            <AlertCircle className="h-4 w-4" />
+                                            <AlertDescription>
+                                                <Link href="/login" className="font-medium text-primary hover:underline">
+                                                    Masuk
+                                                </Link>{' '}
+                                                untuk dapat memberikan komentar pada cerita ini.
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
+
+                                    {/* Comments List */}
+                                    {comments.length > 0 ? (
+                                        <div className="space-y-6">
+                                            <Separator />
+                                            <div className="space-y-6">{comments.map((comment) => renderComment(comment))}</div>
+                                        </div>
+                                    ) : (
+                                        <div className="py-8 text-center">
+                                            <MessageCircle className="mx-auto mb-3 h-12 w-12 text-muted-foreground" />
+                                            <h3 className="mb-1 font-medium">Belum ada komentar</h3>
+                                            <p className="text-sm text-muted-foreground">
+                                                Jadilah orang pertama yang memberikan komentar pada cerita ini
+                                            </p>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
                         </div>
 
                         {/* Sidebar */}
@@ -207,6 +674,14 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                         <div className="flex items-center gap-1">
                                             <Eye className="h-4 w-4 text-muted-foreground" />
                                             <span className="text-sm">{story.total_reads} orang</span>
+                                        </div>
+                                    </div>
+                                    <Separator />
+                                    <div>
+                                        <h4 className="mb-1 font-medium">Total Komentar</h4>
+                                        <div className="flex items-center gap-1">
+                                            <MessageCircle className="h-4 w-4 text-muted-foreground" />
+                                            <span className="text-sm">{totalComments} komentar</span>
                                         </div>
                                     </div>
                                     <Separator />
