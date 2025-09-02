@@ -40,9 +40,11 @@ const NAME_CATEGORIES = [
 
 export default function NamaNusantaraPage({ names, trendingNames, searchQuery, totalNames }: NamaNusantaraPageProps) {
     const [query, setQuery] = useState(searchQuery);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [favorites, setFavorites] = useState<number[]>([]);
     const [selectedName, setSelectedName] = useState<Name | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [randomName, setRandomName] = useState<Name | null>(null);
 
     // AI Generation states
@@ -95,6 +97,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
         }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const generateRandomName = () => {
         if (names.data.length > 0) {
             const randomIndex = Math.floor(Math.random() * names.data.length);
@@ -102,6 +105,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
         }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const toggleFavorite = (nameId: number) => {
         setFavorites((prev) => (prev.includes(nameId) ? prev.filter((id) => id !== nameId) : [...prev, nameId]));
     };

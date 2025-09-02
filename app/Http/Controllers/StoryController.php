@@ -4,12 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Story;
 use App\Models\StoryCategory;
+use App\Services\PointService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class StoryController extends Controller
 {
+    protected $pointService;
+
+    public function __construct(PointService $pointService)
+    {
+        $this->pointService = $pointService;
+    }
+
     public function index(Request $request)
     {
         $query = Story::with(['storyCategory', 'creator', 'quizzes']);
@@ -103,6 +111,29 @@ class StoryController extends Controller
 
         // Increment read count
         $story->increment('total_reads');
+
+        // Award points for reading story (only if user is logged in)
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            // Check if user hasn't read this story today to prevent point farming
+            $todayRead = $user->userPoints()
+                ->where('action', 'story_read')
+                ->where('description', 'like', "%story_id:{$story->id}%")
+                ->whereDate('created_at', today())
+                ->exists();
+
+            if (!$todayRead) {
+                $this->pointService->awardPoints(
+                    $user,
+                    'story_read',
+                    "Membaca cerita: {$story->title} (story_id:{$story->id})"
+                );
+
+                // Increment user's stories read count
+                $user->increment('stories_read');
+            }
+        }
 
         // Load relationships including quizzes and comments
         $story->load(['storyCategory', 'creator', 'quizzes', 'comments']);
@@ -223,6 +254,28 @@ class StoryController extends Controller
             'is_official' => $isOfficial,
             'total_reads' => 0
         ]);
+
+        // Award points for creating story
+        if (Auth::check()) {
+            $user = Auth::user();
+            
+            // Check if this is user's first story
+            $isFirstStory = $user->stories()->count() === 1;
+            
+            if ($isFirstStory) {
+                $this->pointService->awardPoints(
+                    $user, 
+                    'first_story', 
+                    "Cerita pertama: {$story->title}"
+                );
+            }
+            
+            $this->pointService->awardPoints(
+                $user, 
+                'story_created', 
+                "Membuat cerita: {$story->title}"
+            );
+        }
 
         return redirect()->route('stories.show', $story->slug)->with('success', 'Cerita berhasil dikirim! Terima kasih atas kontribusinya.');
     }

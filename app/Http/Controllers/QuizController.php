@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Quiz;
 use App\Models\QuizResult;
 use App\Models\Story;
+use App\Services\PointService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class QuizController extends Controller
 {
+    protected $pointService;
+
+    public function __construct(PointService $pointService)
+    {
+        $this->pointService = $pointService;
+    }
+
     public function show($slug)
     {
         // Get story by slug
@@ -62,13 +70,33 @@ class QuizController extends Controller
 
         $score = round(($correctCount / $totalQuestions) * 100);
 
-        // Save result if user is logged in
+        // Save result and award points if user is logged in
         if (Auth::check()) {
+            $user = Auth::user();
+            
             QuizResult::create([
                 'story_id' => $story->id,
                 'user_id' => Auth::id(),
                 'score' => $score
             ]);
+
+            // Award points based on performance
+            if ($score >= 100) {
+                $this->pointService->awardPoints(
+                    $user, 
+                    'quiz_perfect', 
+                    "Kuis sempurna pada cerita: {$story->title}"
+                );
+            } else {
+                $this->pointService->awardPoints(
+                    $user, 
+                    'quiz_completed', 
+                    "Menyelesaikan kuis pada cerita: {$story->title} (Skor: {$score}%)"
+                );
+            }
+
+            // Increment user's quizzes taken count
+            $user->increment('quizzes_taken');
         }
 
         return response()->json([

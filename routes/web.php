@@ -15,6 +15,10 @@ Route::get('cerita/{story}', [\App\Http\Controllers\StoryController::class, 'sho
 Route::get('nama-nusantara', [\App\Http\Controllers\NameController::class, 'index'])->name('names.index');
 Route::get('nama-nusantara/{name}', [\App\Http\Controllers\NameController::class, 'show'])->name('names.show');
 
+// Leaderboard Routes
+Route::get('/leaderboard', [App\Http\Controllers\LeaderboardController::class, 'index'])
+    ->name('leaderboard.index');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');

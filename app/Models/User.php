@@ -25,6 +25,10 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+        'total_points',
+        'stories_read',
+        'quizzes_taken',
+        'current_badge',
     ];
 
     /**
@@ -77,5 +81,51 @@ class User extends Authenticatable implements FilamentUser
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function userPoints(): HasMany
+    {
+        return $this->hasMany(UserPoint::class);
+    }
+
+    public function userBadges(): HasMany
+    {
+        return $this->hasMany(UserBadge::class);
+    }
+
+    // Helper method to get weekly points gain
+    public function getWeeklyPointsGain()
+    {
+        return $this->userPoints()
+            ->where('created_at', '>=', now()->subWeek())
+            ->sum('points');
+    }
+
+    // Helper method to get leaderboard rank
+    public function getLeaderboardRank($timeFilter = 'alltime')
+    {
+        $query = static::where('total_points', '>', $this->total_points);
+        
+        if ($timeFilter === 'weekly') {
+            // Count users with higher weekly points
+            $query = static::selectRaw('users.id, SUM(CASE WHEN user_points.created_at >= ? THEN user_points.points ELSE 0 END) as weekly_points')
+                ->leftJoin('user_points', 'users.id', '=', 'user_points.user_id')
+                ->groupBy('users.id')
+                ->havingRaw('weekly_points > ?', [
+                    now()->subWeek(),
+                    $this->getWeeklyPointsGain()
+                ]);
+        } elseif ($timeFilter === 'monthly') {
+            // Similar logic for monthly
+            $query = static::selectRaw('users.id, SUM(CASE WHEN user_points.created_at >= ? THEN user_points.points ELSE 0 END) as monthly_points')
+                ->leftJoin('user_points', 'users.id', '=', 'user_points.user_id')
+                ->groupBy('users.id')
+                ->havingRaw('monthly_points > ?', [
+                    now()->subMonth(),
+                    $this->userPoints()->where('created_at', '>=', now()->subMonth())->sum('points')
+                ]);
+        }
+        
+        return $query->count() + 1;
     }
 }

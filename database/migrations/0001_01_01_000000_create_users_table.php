@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->integer('total_points')->default(0);
+            $table->integer('stories_read')->default(0);
+            $table->integer('quizzes_taken')->default(0);
+            $table->string('current_badge')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
