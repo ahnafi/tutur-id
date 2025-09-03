@@ -21,6 +21,8 @@ return new class extends Migration
             $table->integer('stories_read')->default(0);
             $table->integer('quizzes_taken')->default(0);
             $table->string('current_badge')->nullable();
+            $table->string('location')->nullable();
+            $table->text('bio')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

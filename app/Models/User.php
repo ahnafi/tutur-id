@@ -29,6 +29,8 @@ class User extends Authenticatable implements FilamentUser
         'stories_read',
         'quizzes_taken',
         'current_badge',
+        'location',
+        'bio'
     ];
 
     /**

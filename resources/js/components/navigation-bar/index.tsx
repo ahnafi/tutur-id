@@ -51,7 +51,7 @@ export function Navigation() {
                     {user ? (
                         <>
                             <Button variant="ghost" asChild>
-                                <Link href="/profile" className="flex items-center space-x-2">
+                                <Link href="/profil" className="flex items-center space-x-2">
                                     <UserIcon className="h-4 w-4" />
                                     <span>Halo, {user.name}</span>
                                 </Link>

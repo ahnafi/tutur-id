@@ -7,6 +7,8 @@ use App\Models\StoryCategory;
 use App\Services\PointService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class StoryController extends Controller
@@ -258,21 +260,21 @@ class StoryController extends Controller
         // Award points for creating story
         if (Auth::check()) {
             $user = Auth::user();
-            
+
             // Check if this is user's first story
             $isFirstStory = $user->stories()->count() === 1;
-            
+
             if ($isFirstStory) {
                 $this->pointService->awardPoints(
-                    $user, 
-                    'first_story', 
+                    $user,
+                    'first_story',
                     "Cerita pertama: {$story->title}"
                 );
             }
-            
+
             $this->pointService->awardPoints(
-                $user, 
-                'story_created', 
+                $user,
+                'story_created',
                 "Membuat cerita: {$story->title}"
             );
         }
@@ -295,5 +297,148 @@ class StoryController extends Controller
         return inertia('stories/my-contributions', [
             'stories' => $stories
         ]);
+    }
+
+    // Method untuk edit story
+    public function edit(Story $story)
+    {
+        // Authorization check
+        if (!Gate::allows('update', $story)) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit cerita ini.');
+        }
+
+        $categories = StoryCategory::orderBy('name')->get();
+
+        $regions = [
+            "Aceh",
+            "Sumatera Utara",
+            "Sumatera Barat",
+            "Riau",
+            "Kepulauan Riau",
+            "Jambi",
+            "Sumatera Selatan",
+            "Bangka Belitung",
+            "Bengkulu",
+            "Lampung",
+            "DKI Jakarta",
+            "Jawa Barat",
+            "Jawa Tengah",
+            "DI Yogyakarta",
+            "Jawa Timur",
+            "Banten",
+            "Bali",
+            "Nusa Tenggara Barat",
+            "Nusa Tenggara Timur",
+            "Kalimantan Barat",
+            "Kalimantan Tengah",
+            "Kalimantan Selatan",
+            "Kalimantan Timur",
+            "Kalimantan Utara",
+            "Sulawesi Utara",
+            "Sulawesi Tengah",
+            "Sulawesi Selatan",
+            "Sulawesi Tenggara",
+            "Gorontalo",
+            "Sulawesi Barat",
+            "Maluku",
+            "Maluku Utara",
+            "Papua",
+            "Papua Barat",
+            "Papua Selatan",
+            "Papua Tengah",
+            "Papua Pegunungan"
+        ];
+
+        return inertia('stories/edit', [
+            'story' => $story,
+            'categories' => $categories,
+            'regions' => $regions
+        ]);
+    }
+
+    // Method untuk update story
+    public function update(Request $request, Story $story)
+    {
+        // Authorization check
+        if (!Gate::allows('update', $story)) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit cerita ini.');
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string|min:100',
+            'origin_place' => 'required|string',
+            'story_category_id' => 'nullable|exists:story_categories,id',
+            'gmaps_link' => 'nullable|url',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'title.required' => 'Judul cerita wajib diisi.',
+            'title.max' => 'Judul maksimal 255 karakter.',
+            'content.required' => 'Isi cerita wajib diisi.',
+            'content.min' => 'Isi cerita minimal 100 karakter.',
+            'origin_place.required' => 'Asal daerah cerita wajib diisi.',
+            'story_category_id.exists' => 'Kategori cerita tidak valid.',
+            'gmaps_link.url' => 'Link Google Maps harus berupa URL yang valid.',
+            'image.image' => 'File yang diunggah harus berupa gambar.',
+            'image.mimes' => 'Gambar harus berformat jpeg, png, jpg, atau gif.',
+            'image.max' => 'Ukuran gambar maksimal 2MB.'
+        ]);
+
+        $imagePath = $story->image;
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($story->image && Storage::disk('public')->exists(ltrim($story->image, '/'))) {
+                Storage::disk('public')->delete(ltrim($story->image, '/'));
+            }
+
+            $image = $request->file('image');
+            $fileName = 'indonesian-folklore-' . Str::slug($request->title) . '-community.' . $image->getClientOriginalExtension();
+            $imagePath = '/story-images/' . $fileName;
+            $image->storeAs('story-images', $fileName, 'public');
+        }
+
+        // Update slug if title changed
+        $slug = $story->slug;
+        if ($story->title !== $request->title) {
+            $baseSlug = Str::slug($request->title);
+            $newSlug = $baseSlug;
+            $i = 1;
+            while (Story::where('slug', $newSlug)->where('id', '!=', $story->id)->exists()) {
+                $newSlug = $baseSlug . '-' . $i++;
+            }
+            $slug = $newSlug;
+        }
+
+        $story->update([
+            'title' => $request->title,
+            'slug' => $slug,
+            'content' => $request->content,
+            'origin_place' => $request->origin_place,
+            'story_category_id' => $request->story_category_id,
+            'gmaps_link' => $request->gmaps_link,
+            'image' => $imagePath,
+        ]);
+
+        return redirect()->route('profile.index')->with('success', 'Cerita berhasil diperbarui!');
+    }
+
+    // Method untuk delete story
+    public function destroy(Story $story)
+    {
+        // Authorization check
+        if (!Gate::allows('delete', $story)) {
+            abort(403, 'Anda tidak memiliki akses untuk menghapus cerita ini.');
+        }
+
+        // Delete image if exists
+        if ($story->image && Storage::disk('public')->exists(ltrim($story->image, '/'))) {
+            Storage::disk('public')->delete(ltrim($story->image, '/'));
+        }
+
+        $story->delete();
+
+        return back()->with('success', 'Cerita berhasil dihapus!');
     }
 }
