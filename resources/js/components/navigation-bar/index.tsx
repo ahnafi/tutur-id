@@ -3,29 +3,34 @@
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { User } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { BookOpen, LogOut, Menu, Search, Trophy, User as UserIcon } from 'lucide-react';
 import { useState } from 'react';
 
-export function Navigation() {
+interface NavigationProps {
+    auth: {
+        user?: User;
+    };
+}
+
+export function Navigation({ auth }: NavigationProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     // Get user from inertia props
-    const { props } = usePage<{ auth: { user?: User } }>();
-    const user = props.auth?.user;
+    const user = auth?.user;
 
     const navItems = [
-        { href: '/', label: 'Beranda', icon: BookOpen },
-        { href: '/cerita', label: 'Cerita', icon: BookOpen },
-        { href: '/nama-nusantara', label: 'Nama Nusantara', icon: Search },
-        { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+        { href: route('home'), label: 'Beranda', icon: BookOpen },
+        { href: route('stories.index'), label: 'Cerita', icon: BookOpen },
+        { href: route('names.index'), label: 'Nama Nusantara', icon: Search },
+        { href: route('leaderboard.index'), label: 'Leaderboard', icon: Trophy },
     ];
 
     return (
         <nav className="section-padding-x sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex h-16 max-w-screen-xl items-center justify-between">
                 {/* Logo */}
-                <Link href="/" className="flex items-center space-x-2">
+                <Link href={route('home')} className="flex items-center space-x-2">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80">
                         <span className="text-sm font-bold text-primary-foreground">T</span>
                     </div>
@@ -51,13 +56,13 @@ export function Navigation() {
                     {user ? (
                         <>
                             <Button variant="ghost" asChild>
-                                <Link href="/profil" className="flex items-center space-x-2">
+                                <Link href={route('profile.index')} className="flex items-center space-x-2">
                                     <UserIcon className="h-4 w-4" />
                                     <span>Halo, {user.name}</span>
                                 </Link>
                             </Button>
                             <Button variant="ghost" asChild>
-                                <Link href="/logout" method="post" as="button" className="flex items-center space-x-2">
+                                <Link href={route('logout')} method="post" as="button" className="flex items-center space-x-2">
                                     <LogOut className="h-4 w-4" />
                                     <span>Keluar</span>
                                 </Link>
@@ -66,10 +71,10 @@ export function Navigation() {
                     ) : (
                         <>
                             <Button variant="ghost" asChild>
-                                <Link href="/login">Masuk</Link>
+                                <Link href={route('login')}>Masuk</Link>
                             </Button>
                             <Button asChild>
-                                <Link href="/register">Daftar</Link>
+                                <Link href={route('register')}>Daftar</Link>
                             </Button>
                         </>
                     )}
@@ -82,7 +87,7 @@ export function Navigation() {
                             <Menu className="h-5 w-5" />
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="right" className="w-80">
+                    <SheetContent side="right" className="w-80 px-4">
                         <div className="mt-8 flex flex-col space-y-4">
                             {/* User info for mobile */}
                             {user && (
@@ -110,13 +115,13 @@ export function Navigation() {
                                 {user ? (
                                     <>
                                         <Button variant="ghost" className="w-full justify-start" asChild>
-                                            <Link href="/profile" onClick={() => setIsOpen(false)}>
+                                            <Link href={route('profile')} onClick={() => setIsOpen(false)}>
                                                 <UserIcon className="mr-2 h-4 w-4" />
                                                 Profile
                                             </Link>
                                         </Button>
                                         <Button variant="ghost" className="w-full justify-start" asChild>
-                                            <Link href="/logout" method="post" as="button" onClick={() => setIsOpen(false)}>
+                                            <Link href={route('logout')} method="post" as="button" onClick={() => setIsOpen(false)}>
                                                 <LogOut className="mr-2 h-4 w-4" />
                                                 Keluar
                                             </Link>
@@ -125,12 +130,12 @@ export function Navigation() {
                                 ) : (
                                     <>
                                         <Button variant="ghost" className="w-full justify-start" asChild>
-                                            <Link href="/login" onClick={() => setIsOpen(false)}>
+                                            <Link href={route('login')} onClick={() => setIsOpen(false)}>
                                                 Masuk
                                             </Link>
                                         </Button>
-                                        <Button className="w-full" asChild>
-                                            <Link href="/register" onClick={() => setIsOpen(false)}>
+                                        <Button className="w-full justify-start" asChild>
+                                            <Link href={route('register')} onClick={() => setIsOpen(false)}>
                                                 Daftar
                                             </Link>
                                         </Button>

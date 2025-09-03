@@ -137,7 +137,7 @@ export default function RegisterPage() {
                         </Form>
                         <div className="mt-6 text-center text-sm">
                             <span className="text-muted-foreground">Sudah punya akun? </span>
-                            <Link href="/login" className="font-medium text-secondary transition-colors hover:text-secondary/80">
+                            <Link href={route('login')} className="font-medium text-secondary transition-colors hover:text-secondary/80">
                                 Masuk di sini
                             </Link>
                         </div>

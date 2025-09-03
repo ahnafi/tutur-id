@@ -26,7 +26,7 @@ export default function VerifyEmailPage({ status }: { status?: string }) {
                         <CardDescription>Link verifikasi telah dikirim ke email Anda. Silakan periksa kotak masuk Anda.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <Link href="/login">
+                        <Link href={route('login')}>
                             <Button className="w-full bg-primary hover:bg-primary/90">Lanjut ke Login</Button>
                         </Link>
                         <div className="text-center">
@@ -74,7 +74,7 @@ export default function VerifyEmailPage({ status }: { status?: string }) {
                             )}
                         </Form>
                         <div className="text-center">
-                            <Link href="/login" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                            <Link href={route('login')} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
                                 Kembali ke Login
                             </Link>
                         </div>

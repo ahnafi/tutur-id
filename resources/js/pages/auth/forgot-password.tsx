@@ -46,7 +46,7 @@ export default function ForgotPasswordPage({ status }: { status?: string }) {
                                 </Button>
                             </div>
                             <div className="pt-4">
-                                <Link href="/login">
+                                <Link href={route('login')}>
                                     <Button variant="outline" className="w-full bg-transparent">
                                         <ArrowLeft className="mr-2 h-4 w-4" />
                                         Kembali ke Login
@@ -103,7 +103,7 @@ export default function ForgotPasswordPage({ status }: { status?: string }) {
                         </Form>
                         <div className="mt-6 text-center">
                             <Link
-                                href="/login"
+                                href={route('login')}
                                 className="inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-foreground"
                             >
                                 <ArrowLeft className="mr-1 h-4 w-4" />

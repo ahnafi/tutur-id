@@ -98,7 +98,7 @@ export default function LoginPage({ status, canResetPassword }: LoginPageProps) 
                                         {canResetPassword && (
                                             <div className="flex items-center justify-between">
                                                 <Link
-                                                    href="/forgot-password"
+                                                    href={route('password.request')}
                                                     className="text-sm text-secondary transition-colors hover:text-secondary/80"
                                                 >
                                                     Lupa kata sandi?
@@ -116,7 +116,7 @@ export default function LoginPage({ status, canResetPassword }: LoginPageProps) 
                         {status && <div className="mt-2 text-center text-sm text-green-600">{status}</div>}
                         <div className="mt-6 text-center text-sm">
                             <span className="text-muted-foreground">Belum punya akun? </span>
-                            <Link href="/register" className="font-medium text-secondary transition-colors hover:text-secondary/80">
+                            <Link href={route('register')} className="font-medium text-secondary transition-colors hover:text-secondary/80">
                                 Daftar sekarang
                             </Link>
                         </div>

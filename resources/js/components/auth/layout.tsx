@@ -20,8 +20,8 @@ export default function AuthLayout({
     return (
         <div className="flex min-h-screen">
             {/* Form Section - Left Side */}
-            <div className={`flex flex-1 items-center justify-center p-6 lg:p-12 ${reverse ? 'order-2' : 'order-1'}`}>
-                <div className="w-full max-w-md space-y-6">
+            <div className={`flex flex-1 items-center justify-center section-padding-x py-6 lg:py-12 ${reverse ? 'order-2' : 'order-1'}`}>
+                <div className="w-full max-w-2xl space-y-6">
                     <div className="space-y-2 text-center">
                         <h1 className="text-3xl font-bold text-foreground">{title}</h1>
                         {subtitle && <p className="text-balance text-muted-foreground">{subtitle}</p>}
