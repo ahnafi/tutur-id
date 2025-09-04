@@ -3,9 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Cerita Routes
 Route::get('cerita', [\App\Http\Controllers\StoryController::class, 'index'])->name('stories.index');

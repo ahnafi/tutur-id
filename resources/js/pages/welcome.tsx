@@ -1,45 +1,74 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Layout from '@/layouts/layout';
 import { Head, Link } from '@inertiajs/react';
-import { BookOpen, Clock, MapPin, Play, Search, Star, Trophy, Users } from 'lucide-react';
+import { BookOpen, Clock, Eye, Play, Search, Star, Trophy, Users } from 'lucide-react';
 
-export default function HomePage() {
-    const featuredStories = [
-        {
-            title: 'Malin Kundang',
-            origin: 'Sumatera Barat',
-            readTime: '2 menit',
-            rating: 4.8,
-            image: '/img/stories/indonesian-folklore-malin-kundang-traditional-art.png',
-        },
-        {
-            title: 'Sangkuriang',
-            origin: 'Jawa Barat',
-            readTime: '3 menit',
-            rating: 4.9,
-            image: '/img/stories/indonesian-folklore-sangkuriang-traditional-art.png',
-        },
-        {
-            title: 'Keong Mas',
-            origin: 'Jawa Timur',
-            readTime: '2 menit',
-            rating: 4.7,
-            image: '/img/stories/indonesian-folklore-keong-mas-traditional-art.png',
-        },
-    ];
+interface FeaturedStory {
+    id: number;
+    title: string;
+    slug: string;
+    origin_place: string;
+    image?: string;
+    total_reads: number;
+    comments_count: number;
+    category?: string;
+    is_official: boolean;
+    read_time: number;
+    rating: number;
+}
 
-    const popularNames = [
-        { name: 'Arjuna', meaning: 'Putih bersih, suci', origin: 'Jawa' },
-        { name: 'Sari', meaning: 'Inti, yang terbaik', origin: 'Sanskrit' },
-        { name: 'Bayu', meaning: 'Angin', origin: 'Jawa' },
-        { name: 'Dewi', meaning: 'Bidadari', origin: 'Sanskrit' },
-    ];
+interface PopularName {
+    id: number;
+    name: string;
+    slug: string;
+    meaning: string;
+    origin: string;
+    category: string;
+    views: number;
+}
+
+interface RecentStory {
+    id: number;
+    title: string;
+    slug: string;
+    origin_place: string;
+    image?: string;
+    created_at: string;
+    creator: string;
+    category?: string;
+    excerpt: string;
+}
+
+interface Stats {
+    total_stories: number;
+    total_names: number;
+    total_users: number;
+    total_reads: number;
+}
+
+interface HomePageProps {
+    featuredStories: FeaturedStory[];
+    popularNames: PopularName[];
+    stats: Stats;
+    recentStories: RecentStory[];
+}
+
+export default function HomePage({ featuredStories, popularNames, stats, recentStories }: HomePageProps) {
+    const formatNumber = (num: number) => {
+        if (num >= 1000000) {
+            return Math.floor(num / 1000000) + 'M+';
+        }
+        if (num >= 1000) {
+            return Math.floor(num / 1000) + 'K+';
+        }
+        return num.toString();
+    };
 
     return (
         <Layout>
-            <Head title="Selamat Datang" />
+            <Head title="Selamat Datang di Tutur.id" />
 
             <div className="space-y-16">
                 {/* Hero Section */}
@@ -79,15 +108,15 @@ export default function HomePage() {
                                 <div className="flex items-center gap-8 text-sm text-muted-foreground">
                                     <div className="flex items-center gap-2">
                                         <BookOpen className="h-4 w-4" />
-                                        <span>500+ Cerita</span>
+                                        <span>{formatNumber(stats.total_stories)} Cerita</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Users className="h-4 w-4" />
-                                        <span>10K+ Pengguna</span>
+                                        <span>{formatNumber(stats.total_users)} Pengguna</span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Star className="h-4 w-4" />
-                                        <span>4.9 Rating</span>
+                                        <Eye className="h-4 w-4" />
+                                        <span>{formatNumber(stats.total_reads)} Pembaca</span>
                                     </div>
                                 </div>
                             </div>
@@ -166,29 +195,44 @@ export default function HomePage() {
                         </div>
 
                         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                            {featuredStories.map((story, index) => (
-                                <Card key={index} className="overflow-hidden transition-shadow hover:shadow-lg">
-                                    <img src={story.image || '/placeholder.svg'} alt={story.title} className="w-full object-cover max-h-64" />
-                                    <CardHeader>
-                                        <div className="flex items-center justify-between">
-                                            <Badge variant="secondary">{story.origin}</Badge>
-                                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                                <Star className="h-4 w-4 fill-current text-yellow-500" />
-                                                <span>{story.rating}</span>
+                            {featuredStories.slice(0, 6).map((story) => (
+                                <Card key={story.id} className="overflow-hidden transition-shadow hover:shadow-lg">
+                                    <Link href={`/cerita/${story.slug}`}>
+                                        <div className="relative">
+                                            {story.image ? (
+                                                <img src={`/storage${story.image}`} alt={story.title} className="h-48 w-full object-cover" />
+                                            ) : (
+                                                <div className="flex h-48 w-full items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20">
+                                                    <BookOpen className="h-12 w-12 text-primary/60" />
+                                                </div>
+                                            )}
+                                            <div className="absolute top-2 left-2">
+                                                <Badge className={story.is_official ? 'bg-primary' : 'bg-secondary'}>
+                                                    {story.is_official ? 'Resmi' : 'Komunitas'}
+                                                </Badge>
                                             </div>
                                         </div>
-                                        <CardTitle className="text-lg">{story.title}</CardTitle>
-                                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                            <div className="flex items-center gap-1">
-                                                <Clock className="h-4 w-4" />
-                                                <span>{story.readTime}</span>
+                                        <CardHeader>
+                                            <div className="flex items-center justify-between">
+                                                <Badge variant="secondary">{story.origin_place}</Badge>
+                                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                                    <Star className="h-4 w-4 fill-current text-yellow-500" />
+                                                    <span>{story.rating}</span>
+                                                </div>
                                             </div>
-                                            <div className="flex items-center gap-1">
-                                                <MapPin className="h-4 w-4" />
-                                                <span>{story.origin}</span>
+                                            <CardTitle className="text-lg transition-colors hover:text-primary">{story.title}</CardTitle>
+                                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                                <div className="flex items-center gap-1">
+                                                    <Clock className="h-4 w-4" />
+                                                    <span>{story.read_time} menit</span>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <Eye className="h-4 w-4" />
+                                                    <span>{formatNumber(story.total_reads)}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </CardHeader>
+                                        </CardHeader>
+                                    </Link>
                                 </Card>
                             ))}
                         </div>
@@ -209,8 +253,8 @@ export default function HomePage() {
                         </div>
 
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                            {popularNames.map((name, index) => (
-                                <Card key={index} className="p-4 transition-shadow hover:shadow-md">
+                            {popularNames.slice(0, 8).map((name) => (
+                                <Card key={name.id} className="p-4 transition-shadow hover:shadow-md">
                                     <div className="space-y-2">
                                         <div className="flex items-center justify-between">
                                             <h3 className="text-lg font-semibold">{name.name}</h3>
@@ -219,7 +263,47 @@ export default function HomePage() {
                                             </Badge>
                                         </div>
                                         <p className="text-sm text-muted-foreground">{name.meaning}</p>
+                                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                            <span>{name.category}</span>
+                                            <div className="flex items-center gap-1">
+                                                <Eye className="h-3 w-3" />
+                                                <span>{formatNumber(name.views)}</span>
+                                            </div>
+                                        </div>
                                     </div>
+                                </Card>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Recent Stories */}
+                <section className="section-padding-x bg-card/50 pt-16">
+                    <div className="container max-w-screen-xl">
+                        <div className="mb-8">
+                            <h2 className="mb-2 text-3xl font-bold">Cerita Terbaru</h2>
+                            <p className="text-muted-foreground">Kontribusi terbaru dari komunitas</p>
+                        </div>
+
+                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                            {recentStories.map((story) => (
+                                <Card key={story.id} className="transition-shadow hover:shadow-lg">
+                                    <Link href={`/cerita/${story.slug}`}>
+                                        <CardContent className="p-6">
+                                            <div className="space-y-3">
+                                                <div className="flex items-center justify-between">
+                                                    <Badge variant="outline">{story.origin_place}</Badge>
+                                                    <span className="text-xs text-muted-foreground">{story.created_at}</span>
+                                                </div>
+                                                <h3 className="text-lg font-semibold transition-colors hover:text-primary">{story.title}</h3>
+                                                <p className="line-clamp-3 text-sm text-muted-foreground">{story.excerpt}</p>
+                                                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                                    <span>oleh {story.creator}</span>
+                                                    {story.category && <span>{story.category}</span>}
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Link>
                                 </Card>
                             ))}
                         </div>
@@ -232,7 +316,7 @@ export default function HomePage() {
                         <div className="mx-auto max-w-2xl space-y-6">
                             <h2 className="text-3xl font-bold lg:text-4xl">Mulai Perjalanan Budayamu</h2>
                             <p className="text-xl opacity-90">
-                                Bergabunglah dengan ribuan orang yang telah menemukan kembali kekayaan budaya Indonesia
+                                Bergabunglah dengan {formatNumber(stats.total_users)} orang yang telah menemukan kembali kekayaan budaya Indonesia
                             </p>
                             <div className="flex flex-col justify-center gap-4 sm:flex-row">
                                 <Button size="lg" variant="secondary" asChild>
