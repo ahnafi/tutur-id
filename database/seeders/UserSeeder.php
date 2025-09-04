@@ -66,7 +66,8 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            \App\Models\User::create($user);
+           $newUser =  \App\Models\User::create($user);
+           $newUser->assignRole('user');
         }
     }
 }

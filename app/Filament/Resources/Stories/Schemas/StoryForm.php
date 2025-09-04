@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Stories\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -15,6 +16,13 @@ class StoryForm
     {
         return $schema
             ->components([
+
+                FileUpload::make('image')
+                    ->image()
+                    ->imageEditor()
+                    ->directory("story-images")
+                    ->columnSpanFull(),
+
                 TextInput::make('title')
                     ->required(),
                 TextInput::make('origin_place'),
@@ -28,13 +36,16 @@ class StoryForm
                     ->required(),
                 Select::make('story_category_id')
                     ->createOptionForm([
-                        TextInput::make('title')
+                        TextInput::make('name')
                             ->required(),
                     ])
-                    ->relationship('storyCategory', 'title')
+                    ->relationship('storyCategory', 'name')
                     ->preload()
                     ->searchable()
                     ->required(),
+                TextInput::make("total_reads")
+                    ->visibleOn('edit')
+                    ->numeric(),
                 RichEditor::make('content')
                     ->columnSpanFull(),
             ]);

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\StoryCategories;
+namespace App\Filament\Resources\NameCategories;
 
-use App\Filament\Resources\StoryCategories\Pages\CreateStoryCategory;
-use App\Filament\Resources\StoryCategories\Pages\EditStoryCategory;
-use App\Filament\Resources\StoryCategories\Pages\ListStoryCategories;
-use App\Filament\Resources\StoryCategories\Schemas\StoryCategoryForm;
-use App\Filament\Resources\StoryCategories\Tables\StoryCategoriesTable;
-use App\Models\StoryCategory;
+use App\Filament\Resources\NameCategories\Pages\CreateNameCategory;
+use App\Filament\Resources\NameCategories\Pages\EditNameCategory;
+use App\Filament\Resources\NameCategories\Pages\ListNameCategories;
+use App\Filament\Resources\NameCategories\Schemas\NameCategoryForm;
+use App\Filament\Resources\NameCategories\Tables\NameCategoriesTable;
+use App\Models\NameCategory;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -16,9 +16,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class StoryCategoryResource extends Resource
+class NameCategoryResource extends Resource
 {
-    protected static ?string $model = StoryCategory::class;
+    protected static ?string $model = NameCategory::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
@@ -26,12 +26,12 @@ class StoryCategoryResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return StoryCategoryForm::configure($schema);
+        return NameCategoryForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return StoryCategoriesTable::configure($table);
+        return NameCategoriesTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -44,9 +44,9 @@ class StoryCategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListStoryCategories::route('/'),
-            'create' => CreateStoryCategory::route('/create'),
-            'edit' => EditStoryCategory::route('/{record}/edit'),
+            'index' => ListNameCategories::route('/'),
+            'create' => CreateNameCategory::route('/create'),
+            'edit' => EditNameCategory::route('/{record}/edit'),
         ];
     }
 

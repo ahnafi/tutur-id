@@ -1,48 +1,26 @@
 <?php
 
-namespace App\Filament\Resources\Quizzes\Tables;
+namespace App\Filament\Resources\NameCategories\Tables;
 
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class QuizzesTable
+class NameCategoriesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('story.title')
+                TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('question')
+                TextColumn::make('slug')
                     ->searchable(),
-                TextColumn::make('option_a')
-                    ->searchable(),
-                TextColumn::make('option_b')
-                    ->searchable(),
-                TextColumn::make('option_c')
-                    ->searchable(),
-                TextColumn::make('option_d')
-                    ->searchable(),
-                TextColumn::make('correct_answer')
-                    ->formatStateUsing(function ($state) {
-                        return match ($state) {
-                            'option_a' => 'Option A',
-                            'option_b' => 'Option B',
-                            'option_c' => 'Option C',
-                            'option_d' => 'Option D',
-                            default => $state,
-                        };
-                    })
-                    ->badge(),
-
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -60,9 +38,7 @@ class QuizzesTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

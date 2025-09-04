@@ -32,10 +32,10 @@ class QuizForm
                     ->inline()
                     ->required()
                     ->options([
-                        'A' => 'A',
-                        'B' => 'B',
-                        'C' => 'C',
-                        'D' => 'D',
+                        'option_a' => 'Option A',
+                        'option_b' => 'Option B',
+                        'option_c' => 'Option C',
+                        'option_d' => 'Option D',
                     ])
             ]);
     }

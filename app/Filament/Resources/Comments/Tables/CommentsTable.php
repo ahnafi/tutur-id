@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Quizzes\Tables;
+namespace App\Filament\Resources\Comments\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -9,40 +9,28 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Tiptap\Nodes\Text;
 
-class QuizzesTable
+class CommentsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
+                TextColumn::make('content')
+                    ->limit(50,end:' (more)'),
                 TextColumn::make('story.title')
                     ->searchable(),
-                TextColumn::make('question')
+                TextColumn::make('user.name')
                     ->searchable(),
-                TextColumn::make('option_a')
+                TextColumn::make('parent.id')
                     ->searchable(),
-                TextColumn::make('option_b')
-                    ->searchable(),
-                TextColumn::make('option_c')
-                    ->searchable(),
-                TextColumn::make('option_d')
-                    ->searchable(),
-                TextColumn::make('correct_answer')
-                    ->formatStateUsing(function ($state) {
-                        return match ($state) {
-                            'option_a' => 'Option A',
-                            'option_b' => 'Option B',
-                            'option_c' => 'Option C',
-                            'option_d' => 'Option D',
-                            default => $state,
-                        };
-                    })
-                    ->badge(),
-
+                IconColumn::make('is_approved')
+                    ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -61,7 +49,6 @@ class QuizzesTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
