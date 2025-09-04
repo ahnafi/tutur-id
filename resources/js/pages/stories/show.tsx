@@ -261,10 +261,6 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
             <div key={comment.id} className={`${depth > 0 ? 'ml-8 border-l-2 border-gray-200 pl-4' : ''}`}>
                 <div className="space-y-3">
                     <div className="flex items-start gap-3">
-                        <Avatar className="h-8 w-8">
-                            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.user.name}`} />
-                            <AvatarFallback>{comment.user.name.charAt(0).toUpperCase()}</AvatarFallback>
-                        </Avatar>
                         <div className="flex-1 space-y-2">
                             <div className="flex items-center gap-2">
                                 <span className="text-sm font-medium">{comment.user.name}</span>
@@ -305,7 +301,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                 <>
                                     <p className="text-sm leading-relaxed whitespace-pre-wrap">{comment.content}</p>
 
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center flex-wrap gap-3">
                                         {user && (
                                             <Button
                                                 variant="ghost"
@@ -314,7 +310,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                                     setReplyTo(comment.id);
                                                     setReplyContent('');
                                                 }}
-                                                className="h-auto p-0 py-1 text-xs text-muted-foreground hover:text-primary"
+                                                className="h-auto p-0 py-1 text-xs text-muted-foreground"
                                             >
                                                 <Reply className="mr-1 h-3 w-3" />
                                                 Balas
@@ -330,7 +326,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                                         setEditingComment(comment.id);
                                                         setEditContent(comment.content);
                                                     }}
-                                                    className="h-auto p-0 py-1 text-xs text-muted-foreground hover:text-primary"
+                                                    className="h-auto p-0 py-1 text-xs text-muted-foreground hover:text-gray-50 hover:bg-green-600"
                                                 >
                                                     <Edit3 className="mr-1 h-3 w-3" />
                                                     Edit
@@ -341,7 +337,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                                         <Button
                                                             variant="ghost"
                                                             size="sm"
-                                                            className="h-auto p-0 py-1 text-xs text-red-600 hover:text-red-700"
+                                                            className="h-auto p-0 py-1 text-xs text-red-600 hover:text-gray-50 hover:bg-red-600"
                                                             disabled={deletingComment === comment.id}
                                                         >
                                                             {deletingComment === comment.id ? (
@@ -453,7 +449,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                 <div className="container max-w-screen-xl">
                     {/* Back Button */}
                     <Button variant="ghost" asChild className="mb-6">
-                        <Link href="/cerita">
+                        <Link href={route('stories.index')}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Kembali ke Daftar Cerita
                         </Link>
@@ -463,7 +459,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                     <div className="space-y-6">
                         <div className="relative h-64 overflow-hidden rounded-xl md:h-80">
                             <img
-                                src={story.image ? `/storage${story.image}` : '/placeholder.svg'}
+                                src={story.image ? `/storage${story.image}` : '/img/stories/default.jpg'}
                                 alt={story.title}
                                 className="h-full w-full object-cover"
                             />
@@ -477,7 +473,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                     </Badge>
                                 </div>
                                 <h1 className="mb-2 text-3xl font-bold md:text-4xl">{story.title}</h1>
-                                <div className="flex items-center gap-4 text-sm">
+                                <div className="flex items-center gap-4 text-sm flex-wrap">
                                     <div className="flex items-center gap-1">
                                         <Clock className="h-4 w-4" />
                                         <span>{getReadTime(story.content)}</span>
@@ -504,7 +500,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                         <div className="flex flex-wrap gap-3">
                             {story.quizzes && story.quizzes.length > 0 && (
                                 <Button asChild>
-                                    <Link href={`/cerita/${story.slug}/kuis`}>
+                                    <Link href={route('stories.quiz', story.slug)}>
                                         <Play className="mr-2 h-4 w-4" />
                                         Ikuti Kuis ({story.quizzes.length} Soal)
                                     </Link>
@@ -558,7 +554,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                     </CardHeader>
                                     <CardContent>
                                         <Button asChild>
-                                            <Link href={`/cerita/${story.slug}/kuis`}>Mulai Kuis ({story.quizzes.length} Soal)</Link>
+                                            <Link href={route('stories.quiz', story.slug)}>Mulai Kuis ({story.quizzes.length} Soal)</Link>
                                         </Button>
                                     </CardContent>
                                 </Card>
@@ -616,7 +612,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                         <Alert>
                                             <AlertCircle className="h-4 w-4" />
                                             <AlertDescription>
-                                                <Link href="/login" className="font-medium text-primary hover:underline">
+                                                <Link href={route('login')} className="font-medium text-primary hover:underline">
                                                     Masuk
                                                 </Link>{' '}
                                                 untuk dapat memberikan komentar pada cerita ini.
@@ -727,7 +723,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                             {relatedStories.map((relatedStory) => (
                                                 <Link
                                                     key={relatedStory.id}
-                                                    href={`/cerita/${relatedStory.slug}`}
+                                                    href={route('stories.show', relatedStory.slug)}
                                                     className="block rounded-lg p-3 transition-colors hover:bg-accent/50"
                                                 >
                                                     <div className="flex items-start gap-3">
@@ -763,14 +759,14 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                 <CardContent className="p-4">
                                     <div className="space-y-2">
                                         <Button variant="outline" asChild className="w-full justify-start">
-                                            <Link href="/cerita">
+                                            <Link href={route('stories.index')}>
                                                 <BookOpen className="mr-2 h-4 w-4" />
                                                 Jelajahi Cerita Lain
                                             </Link>
                                         </Button>
                                         {story.quizzes && story.quizzes.length > 0 && (
                                             <Button asChild className="w-full justify-start">
-                                                <Link href={`/cerita/${story.slug}/kuis`}>
+                                                <Link href={route('stories.quiz', story.slug)}>
                                                     <Play className="mr-2 h-4 w-4" />
                                                     Ikuti Kuis
                                                 </Link>

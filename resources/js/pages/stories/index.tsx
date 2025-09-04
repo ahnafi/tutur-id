@@ -141,7 +141,7 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                 <p className="text-muted-foreground">Jelajahi kekayaan cerita tradisional Indonesia</p>
                             </div>
                             <Button asChild>
-                                <Link href="/kontribusi">
+                                <Link href={route('stories.create')} className="flex items-center gap-2">
                                     <Users className="mr-2 h-4 w-4" />
                                     Kontribusi Cerita
                                 </Link>
@@ -247,7 +247,7 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                 <TabsContent value="all" className="space-y-6">
                                     <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                                         {stories.data.map((story) => (
-                                            <Card key={story.id} className="overflow-hidden transition-shadow hover:shadow-lg">
+                                            <Card key={story.id} className="overflow-hidden transition-shadow hover:shadow-lg pt-0">
                                                 <div className="relative h-48">
                                                     <img
                                                         src={story.image ? `/storage${story.image}` : '/placeholder.svg'}
@@ -295,7 +295,7 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                                 </CardHeader>
                                                 <CardContent>
                                                     <Button asChild className="w-full">
-                                                        <Link href={`/cerita/${story.slug}`}>
+                                                        <Link href={route('stories.show', story.slug)}>
                                                             <BookOpen className="mr-2 h-4 w-4" />
                                                             Baca Cerita
                                                         </Link>
@@ -354,7 +354,7 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                                 </CardHeader>
                                                 <CardContent>
                                                     <Button asChild className="w-full">
-                                                        <Link href={`/cerita/${story.slug}`}>
+                                                        <Link href={route('stories.show', story.slug)}>
                                                             <BookOpen className="mr-2 h-4 w-4" />
                                                             Baca Cerita
                                                         </Link>
@@ -414,7 +414,7 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                                 </CardHeader>
                                                 <CardContent>
                                                     <Button asChild className="w-full">
-                                                        <Link href={`/cerita/${story.slug}`}>
+                                                        <Link href={route('stories.show', story.slug)}>
                                                             <BookOpen className="mr-2 h-4 w-4" />
                                                             Baca Cerita
                                                         </Link>
@@ -455,8 +455,8 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                         {trendingStories.map((story, index) => (
                                             <Link
                                                 key={story.id}
-                                                href={`/cerita/${story.slug}`}
-                                                className="block rounded-lg p-3 transition-colors hover:bg-muted/50"
+                                                href={route('stories.show', story.slug)}
+                                                className="block rounded-lg transition-colors hover:bg-muted/50"
                                             >
                                                 <div className="flex items-start gap-3">
                                                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">

@@ -3,21 +3,16 @@
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { User } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, LogOut, Menu, Search, Trophy, User as UserIcon } from 'lucide-react';
 import { useState } from 'react';
 
-interface NavigationProps {
-    auth: {
-        user?: User;
-    };
-}
-
-export function Navigation({ auth }: NavigationProps) {
+export function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
 
     // Get user from inertia props
-    const user = auth?.user;
+    const { props } = usePage<{ auth: { user?: User } }>();
+    const user = props.auth?.user;
 
     const navItems = [
         { href: route('home'), label: 'Beranda', icon: BookOpen },
@@ -38,7 +33,7 @@ export function Navigation({ auth }: NavigationProps) {
                 </Link>
 
                 {/* Desktop Navigation */}
-                <div className="hidden items-center space-x-6 md:flex">
+                <div className="hidden items-center space-x-6 lg:flex">
                     {navItems.map((item) => (
                         <Link
                             key={item.href}
@@ -52,7 +47,7 @@ export function Navigation({ auth }: NavigationProps) {
                 </div>
 
                 {/* Auth Buttons - Desktop */}
-                <div className="hidden items-center space-x-2 md:flex">
+                <div className="hidden items-center space-x-2 lg:flex">
                     {user ? (
                         <>
                             <Button variant="ghost" asChild>
@@ -82,7 +77,7 @@ export function Navigation({ auth }: NavigationProps) {
 
                 {/* Mobile Menu */}
                 <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                    <SheetTrigger asChild className="md:hidden">
+                    <SheetTrigger asChild className="lg:hidden">
                         <Button variant="ghost" size="icon">
                             <Menu className="h-5 w-5" />
                         </Button>
@@ -115,7 +110,7 @@ export function Navigation({ auth }: NavigationProps) {
                                 {user ? (
                                     <>
                                         <Button variant="ghost" className="w-full justify-start" asChild>
-                                            <Link href={route('profile')} onClick={() => setIsOpen(false)}>
+                                            <Link href={route('profile.index')} onClick={() => setIsOpen(false)}>
                                                 <UserIcon className="mr-2 h-4 w-4" />
                                                 Profile
                                             </Link>

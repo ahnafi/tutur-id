@@ -129,6 +129,7 @@ export interface Story {
     updated_at: string;
     deleted_at: string | null;
     story_category?: StoryCategory;
+    all_comments_count?: number;
     creator?: User;
     quizzes?: Quiz[];
     comments?: Comment[];

@@ -443,7 +443,7 @@ export default function ProfilPage({ user, stats, contributions, achievements, r
                                                 </div>
                                             )}
 
-                                            <div className="flex gap-2 mt-2">
+                                            <div className="mt-2 flex gap-2">
                                                 <Button variant="outline" size="sm" asChild>
                                                     <Link href={`/cerita/${contribution.slug}`}>
                                                         <Eye className="mr-2 h-4 w-4" />

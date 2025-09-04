@@ -22,6 +22,7 @@ export default function QuizPage({ story, previousResult }: QuizPageProps) {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
     const [showResults, setShowResults] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [quizCompleted, setQuizCompleted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [results, setResults] = useState<{

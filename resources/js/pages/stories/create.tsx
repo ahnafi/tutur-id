@@ -27,8 +27,6 @@ export default function ContributionPage({ categories, regions }: ContributionPa
     const [submitted, setSubmitted] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-    console.log(categories, regions);
-
     // Get user from props
     const { props } = usePage<{ auth: { user?: User } }>();
     const user = props.auth?.user;
@@ -53,7 +51,7 @@ export default function ContributionPage({ categories, regions }: ContributionPa
             }
         });
 
-        post('/kontribusi', {
+        post(route('stories.store'), {
             onSuccess: () => {
                 setSubmitted(true);
                 reset();
@@ -118,11 +116,11 @@ export default function ContributionPage({ categories, regions }: ContributionPa
                             <div className="flex flex-col justify-center gap-3 sm:flex-row">
                                 <Button onClick={() => setSubmitted(false)}>{isAdmin ? 'Tambah Cerita Lain' : 'Kirim Cerita Lain'}</Button>
                                 <Button variant="outline" asChild>
-                                    <Link href="/cerita">Lihat Cerita Lainnya</Link>
+                                    <Link href={route('stories.index')}>Lihat Cerita Lainnya</Link>
                                 </Button>
                                 {user && (
                                     <Button variant="outline" asChild>
-                                        <Link href="/kontribusi-saya">Kontribusi Saya</Link>
+                                        <Link href={route('stories.my-contributions')}>Kontribusi Saya</Link>
                                     </Button>
                                 )}
                             </div>
@@ -151,7 +149,7 @@ export default function ContributionPage({ categories, regions }: ContributionPa
 
                         <div className="grid gap-8 lg:grid-cols-3">
                             <div className="space-y-6 lg:col-span-2">
-                                <Card>
+                                <Card className="pt-0">
                                     <div className="relative h-48 overflow-hidden rounded-t-lg">
                                         {imagePreview ? (
                                             <img src={imagePreview} alt={data.title} className="h-full w-full object-cover" />
@@ -245,7 +243,7 @@ export default function ContributionPage({ categories, regions }: ContributionPa
             <div className="section-padding-x py-4 md:py-8">
                 <div className="container max-w-screen-xl">
                     <Button variant="ghost" asChild className="mb-6">
-                        <Link href="/cerita">
+                        <Link href={route('stories.index')}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Kembali ke Cerita
                         </Link>
