@@ -50,7 +50,7 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
     useEffect(() => {
         if (timeFilter !== initialTimeFilter) {
             router.get(
-                '/leaderboard',
+                route('leaderboard.index'),
                 { timeFilter },
                 {
                     preserveState: true,
@@ -115,7 +115,9 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
                                     size="sm"
                                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                     onClick={() => setTimeFilter(filter.key as any)}
-                                    className={timeFilter === filter.key ? 'bg-amber-600 hover:bg-amber-700' : 'hover:bg-amber-50'}
+                                    className={
+                                        timeFilter === filter.key ? 'bg-amber-600 hover:bg-amber-700' : 'hover:bg-amber-50 hover:text-amber-700'
+                                    }
                                 >
                                     {filter.label}
                                 </Button>

@@ -202,20 +202,10 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                         {(filters.search || filters.region !== 'all' || filters.category !== 'all') && (
                             <div className="flex flex-wrap items-center gap-2">
                                 <span className="text-sm text-muted-foreground">Filter aktif:</span>
-                                {filters.search && (
-                                    <Badge variant="secondary">
-                                        Pencarian: "{filters.search}"
-                                    </Badge>
-                                )}
-                                {filters.region !== 'all' && (
-                                    <Badge variant="secondary">
-                                        Daerah: {filters.region}
-                                    </Badge>
-                                )}
+                                {filters.search && <Badge variant="secondary">Pencarian: "{filters.search}"</Badge>}
+                                {filters.region !== 'all' && <Badge variant="secondary">Daerah: {filters.region}</Badge>}
                                 {filters.category !== 'all' && (
-                                    <Badge variant="secondary">
-                                        Kategori: {categories.find((c) => c.id.toString() === filters.category)?.name}
-                                    </Badge>
+                                    <Badge variant="secondary">Kategori: {categories.find((c) => c.id.toString() === filters.category)?.name}</Badge>
                                 )}
                                 <Button variant="outline" size="sm" onClick={resetFilters}>
                                     Reset Filter
@@ -247,10 +237,10 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                 <TabsContent value="all" className="space-y-6">
                                     <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                                         {stories.data.map((story) => (
-                                            <Card key={story.id} className="overflow-hidden transition-shadow hover:shadow-lg pt-0">
+                                            <Card key={story.id} className="overflow-hidden pt-0 transition-shadow hover:shadow-lg">
                                                 <div className="relative h-48">
                                                     <img
-                                                        src={story.image ? `/storage${story.image}` : '/placeholder.svg'}
+                                                        src={story.image ? `/storage${story.image}` : '/img/stories/default.jpg'}
                                                         alt={story.title}
                                                         className="h-full w-full object-cover"
                                                     />
@@ -261,9 +251,7 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                                     </div>
                                                     {story.story_category && (
                                                         <div className="absolute top-3 right-3">
-                                                            <Badge variant="secondary">
-                                                                {story.story_category.name}
-                                                            </Badge>
+                                                            <Badge variant="secondary">{story.story_category.name}</Badge>
                                                         </div>
                                                     )}
                                                 </div>
@@ -317,7 +305,7 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                             <Card key={story.id} className="overflow-hidden transition-shadow hover:shadow-lg">
                                                 <div className="relative h-48">
                                                     <img
-                                                        src={story.image ? `/storage${story.image}` : '/placeholder.svg'}
+                                                        src={story.image ? `/storage${story.image}` : '/img/stories/default.jpg'}
                                                         alt={story.title}
                                                         className="h-full w-full object-cover"
                                                     />
@@ -326,9 +314,7 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                                     </div>
                                                     {story.story_category && (
                                                         <div className="absolute top-3 right-3">
-                                                            <Badge variant="secondary">
-                                                                {story.story_category.name}
-                                                            </Badge>
+                                                            <Badge variant="secondary">{story.story_category.name}</Badge>
                                                         </div>
                                                     )}
                                                 </div>
@@ -371,7 +357,7 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                             <Card key={story.id} className="overflow-hidden transition-shadow hover:shadow-lg">
                                                 <div className="relative h-48">
                                                     <img
-                                                        src={story.image ? `/storage${story.image}` : '/placeholder.svg'}
+                                                        src={story.image ? `/storage${story.image}` : '/img/stories/default.jpg'}
                                                         alt={story.title}
                                                         className="h-full w-full object-cover"
                                                     />
@@ -380,9 +366,7 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                                     </div>
                                                     {story.story_category && (
                                                         <div className="absolute top-3 right-3">
-                                                            <Badge variant="secondary">
-                                                                {story.story_category.name}
-                                                            </Badge>
+                                                            <Badge variant="secondary">{story.story_category.name}</Badge>
                                                         </div>
                                                     )}
                                                 </div>
@@ -489,15 +473,11 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
                                     </div>
                                     <div className="mt-4 grid grid-cols-2 gap-4 border-t border-border pt-4">
                                         <div className="text-center">
-                                            <div className="text-lg font-semibold">
-                                                {stories.data.filter((s) => s.is_official).length}
-                                            </div>
+                                            <div className="text-lg font-semibold">{stories.data.filter((s) => s.is_official).length}</div>
                                             <div className="text-xs text-muted-foreground">Resmi</div>
                                         </div>
                                         <div className="text-center">
-                                            <div className="text-lg font-semibold">
-                                                {stories.data.filter((s) => !s.is_official).length}
-                                            </div>
+                                            <div className="text-lg font-semibold">{stories.data.filter((s) => !s.is_official).length}</div>
                                             <div className="text-xs text-muted-foreground">Komunitas</div>
                                         </div>
                                     </div>

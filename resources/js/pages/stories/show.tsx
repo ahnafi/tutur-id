@@ -132,7 +132,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                 setNewComment('');
                 toast.success('Komentar berhasil ditambahkan!');
             }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat menambah komentar';
             toast.error(errorMessage);
@@ -177,7 +177,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                 setReplyContent('');
                 toast.success('Balasan berhasil ditambahkan!');
             }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat menambah balasan';
             toast.error(errorMessage);
@@ -207,7 +207,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                 setComments(removeCommentFromList(comments));
                 toast.success('Komentar berhasil dihapus!');
             }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat menghapus komentar';
             toast.error(errorMessage);
@@ -249,7 +249,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                 setEditContent('');
                 toast.success('Komentar berhasil diperbarui!');
             }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat mengupdate komentar';
             toast.error(errorMessage);
@@ -301,7 +301,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                 <>
                                     <p className="text-sm leading-relaxed whitespace-pre-wrap">{comment.content}</p>
 
-                                    <div className="flex items-center flex-wrap gap-3">
+                                    <div className="flex flex-wrap items-center gap-3">
                                         {user && (
                                             <Button
                                                 variant="ghost"
@@ -326,7 +326,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                                         setEditingComment(comment.id);
                                                         setEditContent(comment.content);
                                                     }}
-                                                    className="h-auto p-0 py-1 text-xs text-muted-foreground hover:text-gray-50 hover:bg-green-600"
+                                                    className="h-auto p-0 py-1 text-xs text-muted-foreground hover:bg-green-600 hover:text-gray-50"
                                                 >
                                                     <Edit3 className="mr-1 h-3 w-3" />
                                                     Edit
@@ -337,7 +337,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                                         <Button
                                                             variant="ghost"
                                                             size="sm"
-                                                            className="h-auto p-0 py-1 text-xs text-red-600 hover:text-gray-50 hover:bg-red-600"
+                                                            className="h-auto p-0 py-1 text-xs text-red-600 hover:bg-red-600 hover:text-gray-50"
                                                             disabled={deletingComment === comment.id}
                                                         >
                                                             {deletingComment === comment.id ? (
@@ -445,7 +445,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
 
             <Head title={`${story.title} - Cerita Rakyat Nusantara`} />
 
-            <div className="section-padding-x py-4 md:py-8">
+            <div className="section-padding-x py-8">
                 <div className="container max-w-screen-xl">
                     {/* Back Button */}
                     <Button variant="ghost" asChild className="mb-6">
@@ -473,7 +473,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                     </Badge>
                                 </div>
                                 <h1 className="mb-2 text-3xl font-bold md:text-4xl">{story.title}</h1>
-                                <div className="flex items-center gap-4 text-sm flex-wrap">
+                                <div className="flex flex-wrap items-center gap-4 text-sm">
                                     <div className="flex items-center gap-1">
                                         <Clock className="h-4 w-4" />
                                         <span>{getReadTime(story.content)}</span>

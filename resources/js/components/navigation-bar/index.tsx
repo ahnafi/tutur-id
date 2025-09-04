@@ -56,7 +56,7 @@ export function Navigation() {
                                     <span>Halo, {user.name}</span>
                                 </Link>
                             </Button>
-                            <Button variant="ghost" asChild>
+                            <Button variant="ghost" asChild className="bg-red-600 hover:bg-red-700 text-gray-50">
                                 <Link href={route('logout')} method="post" as="button" className="flex items-center space-x-2">
                                     <LogOut className="h-4 w-4" />
                                     <span>Keluar</span>
@@ -115,7 +115,7 @@ export function Navigation() {
                                                 Profile
                                             </Link>
                                         </Button>
-                                        <Button variant="ghost" className="w-full justify-start" asChild>
+                                        <Button variant="ghost" className="w-full justify-start bg-red-600 hover:bg-red-700 text-gray-50" asChild>
                                             <Link href={route('logout')} method="post" as="button" onClick={() => setIsOpen(false)}>
                                                 <LogOut className="mr-2 h-4 w-4" />
                                                 Keluar

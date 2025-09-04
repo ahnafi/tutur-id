@@ -43,7 +43,7 @@ export default function MyContributionsPage({ stories }: MyContributionsPageProp
         <Layout>
             <Head title="Kontribusi Cerita Saya" />
 
-            <div className="section-padding-x py-4 md:py-8">
+            <div className="section-padding-x py-8">
                 <div className="container max-w-screen-xl">
                     {/* Header */}
                     <div className="mb-8">

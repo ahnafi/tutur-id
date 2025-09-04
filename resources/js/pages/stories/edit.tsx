@@ -64,7 +64,7 @@ export default function EditStoryPage({ story, categories, regions }: EditStoryP
         <Layout>
             <Head title={`Edit Cerita: ${story.title}`} />
 
-            <div className="section-padding-x py-4 md:py-8">
+            <div className="section-padding-x py-8">
                 <div className="container max-w-screen-xl">
                     {/* Header */}
                     <div className="mb-8">
@@ -201,7 +201,7 @@ export default function EditStoryPage({ story, categories, regions }: EditStoryP
                         </Card>
 
                         <div className="flex gap-3">
-                            <Button variant="outline" asChild className="flex-1 hover:text-gray-50 hover:bg-red-600">
+                            <Button variant="outline" asChild className="flex-1 hover:bg-red-600 hover:text-gray-50">
                                 <Link href={route('profile.index')}>Batal</Link>
                             </Button>
                             <Button type="submit" disabled={processing} className="flex-1">

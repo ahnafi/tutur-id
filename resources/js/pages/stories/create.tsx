@@ -84,7 +84,7 @@ export default function ContributionPage({ categories, regions }: ContributionPa
                 <Toaster />
 
                 <Head title="Cerita Berhasil Dikirim" />
-                <div className="section-padding-x py-4 md:py-8">
+                <div className="section-padding-x py-8">
                     <div className="container max-w-screen-xl">
                         <div className="space-y-6 text-center">
                             <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-green-600">
@@ -137,7 +137,7 @@ export default function ContributionPage({ categories, regions }: ContributionPa
                 <Toaster />
 
                 <Head title="Preview Cerita" />
-                <div className="section-padding-x py-4 md:py-8">
+                <div className="section-padding-x py-8">
                     <div className="container max-w-screen-xl">
                         <div className="mb-6 flex items-center justify-between">
                             <Button variant="ghost" onClick={() => setShowPreview(false)}>
@@ -240,7 +240,7 @@ export default function ContributionPage({ categories, regions }: ContributionPa
             <Toaster />
 
             <Head title={isAdmin ? 'Tambah Cerita Resmi' : 'Kontribusi Cerita'} />
-            <div className="section-padding-x py-4 md:py-8">
+            <div className="section-padding-x py-8">
                 <div className="container max-w-screen-xl">
                     <Button variant="ghost" asChild className="mb-6">
                         <Link href={route('stories.index')}>

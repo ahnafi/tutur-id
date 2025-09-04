@@ -185,8 +185,8 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
             <Head title="Nama Nusantara" />
             <Toaster />
 
-            <div className="section-padding-x min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
-                <div className="container max-w-screen-xl py-8">
+            <div className="section-padding-x min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-8">
+                <div className="container max-w-screen-xl">
                     {/* Header */}
                     <div className="mb-12 text-center">
                         <h1 className="mb-4 text-4xl font-bold text-balance text-amber-900 md:text-5xl">Nama Nusantara</h1>
@@ -420,7 +420,12 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                     <DialogHeader>
                         <DialogTitle className="flex items-center justify-between text-2xl text-amber-900">
                             {selectedName?.name}
-                            <Button variant="ghost" size="sm" onClick={() => setIsDialogOpen(false)} className="text-amber-600 hover:text-amber-50">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setIsDialogOpen(false)}
+                                className="text-red-600 hover:bg-red-600 hover:text-gray-50"
+                            >
                                 <X className="h-4 w-4" />
                             </Button>
                         </DialogTitle>
@@ -468,7 +473,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
             >
                 <DialogContent className="max-w-3xl [&>button]:hidden">
                     <DialogHeader>
-                        <DialogTitle className="flex items-center justify-between text-base md:text-2xl text-purple-900">
+                        <DialogTitle className="flex items-center justify-between text-base text-purple-900 md:text-2xl">
                             <div className="flex items-center gap-2">
                                 <Bot className="h-6 w-6" />
                                 Temukan Inspirasi Nama
@@ -480,7 +485,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                     setIsAIDialogOpen(false);
                                     resetAIDialog();
                                 }}
-                                className="text-purple-600 hover:text-purple-700 hover:text-amber-50"
+                                className="text-red-600 hover:bg-red-600 hover:text-gray-50"
                             >
                                 <X className="h-4 w-4" />
                             </Button>
@@ -496,7 +501,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                         placeholder="Contoh: nama yang berkaitan dengan alam dan kekuatan mistis, nama yang melambangkan keberanian dan kebijaksanaan, dll..."
                                         value={characteristics}
                                         onChange={(e) => setCharacteristics(e.target.value)}
-                                        className="border-purple-200 focus:border-purple-400 text-sm md:text-base"
+                                        className="border-purple-200 text-sm focus:border-purple-400 md:text-base"
                                         rows={4}
                                     />
                                 </div>
