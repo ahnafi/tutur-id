@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Layout from '@/layouts/layout';
 import { Head, Link } from '@inertiajs/react';
 import { BookOpen, Clock, Eye, Play, Search, Star, Trophy, Users } from 'lucide-react';
@@ -278,7 +278,7 @@ export default function HomePage({ featuredStories, popularNames, stats, recentS
                 </section>
 
                 {/* Recent Stories */}
-                <section className="section-padding-x bg-card/50 pt-16">
+                {/* <section className="section-padding-x bg-card/50 pt-16">
                     <div className="container max-w-screen-xl">
                         <div className="mb-8">
                             <h2 className="mb-2 text-3xl font-bold">Cerita Terbaru</h2>
@@ -308,7 +308,7 @@ export default function HomePage({ featuredStories, popularNames, stats, recentS
                             ))}
                         </div>
                     </div>
-                </section>
+                </section> */}
 
                 {/* CTA Section */}
                 <section className="section-padding-x bg-primary py-20 text-primary-foreground">
