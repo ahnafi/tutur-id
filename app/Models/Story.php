@@ -23,6 +23,7 @@ class Story extends Model
         'total_reads',
         'image',
         "story_category_id",
+        'verification_status',
     ];
 
     protected static function booted(): void

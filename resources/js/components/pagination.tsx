@@ -49,7 +49,7 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
                     variant="outline"
                     size="sm"
                     onClick={() => handlePageChange(`${data.path}?page=1`)}
-                    className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                    className="border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700"
                 >
                     1
                 </Button>,
@@ -72,7 +72,11 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
                     variant={i === currentPage ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => handlePageChange(`${data.path}?page=${i}`)}
-                    className={i === currentPage ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
+                    className={
+                        i === currentPage
+                            ? 'bg-amber-600 hover:bg-amber-700'
+                            : 'border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700'
+                    }
                 >
                     {i}
                 </Button>,
@@ -120,9 +124,9 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
                     size="sm"
                     onClick={() => handlePageChange(data.prev_page_url)}
                     disabled={!data.prev_page_url}
-                    className="very-small-font-size border-amber-300 text-amber-700 hover:bg-amber-50 disabled:opacity-50"
+                    className="very-small-font-size border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700 disabled:opacity-50"
                 >
-                    <ChevronLeft className="mr-1 h-4 w-4 hidden md:block" />
+                    <ChevronLeft className="mr-1 hidden h-4 w-4 md:block" />
                     Sebelumnya
                 </Button>
 
@@ -135,10 +139,10 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
                     size="sm"
                     onClick={() => handlePageChange(data.next_page_url)}
                     disabled={!data.next_page_url}
-                    className="very-small-font-size border-amber-300 text-amber-700 hover:bg-amber-50 disabled:opacity-50"
+                    className="very-small-font-size border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700 disabled:opacity-50"
                 >
                     Selanjutnya
-                    <ChevronRight className="ml-1 h-4 w-4 hidden md:block" />
+                    <ChevronRight className="ml-1 hidden h-4 w-4 md:block" />
                 </Button>
             </div>
         </div>

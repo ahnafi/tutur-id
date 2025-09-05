@@ -22,7 +22,7 @@ class StoryController extends Controller
 
     public function index(Request $request)
     {
-        $query = Story::with(['storyCategory', 'creator', 'quizzes']);
+        $query = Story::with(['storyCategory', 'creator', 'quizzes'])->where('verification_status', 'approved');
 
         // Search functionality
         if ($request->has('search') && $request->search) {

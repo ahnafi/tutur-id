@@ -48,6 +48,14 @@ class StoryForm
                     ->numeric(),
                 RichEditor::make('content')
                     ->columnSpanFull(),
+                Select::make('verification_status')
+                    ->options([
+                        'pending_review' => 'Pending Review',
+                        'approved' => 'Approved',
+                        'rejected' => 'Rejected',
+                    ])
+                    ->default('pending_review')
+                    ->required(),
             ]);
     }
 }

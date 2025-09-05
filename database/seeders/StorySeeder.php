@@ -23,6 +23,7 @@ class StorySeeder extends Seeder
                 'total_reads' => 1250,
                 'story_category_id' => 1,
                 'image' => '/story-images/indonesian-folklore-malin-kundang-traditional-art.png',
+                'verification_status' => 'approved',
             ],
             [
                 'title' => 'Sangkuriang',
@@ -34,6 +35,7 @@ class StorySeeder extends Seeder
                 'total_reads' => 980,
                 'story_category_id' => 1,
                 'image' => '/story-images/indonesian-folklore-sangkuriang-traditional-art.png',
+                'verification_status' => 'approved',
             ],
             [
                 'title' => 'Keong Mas',
@@ -45,6 +47,7 @@ class StorySeeder extends Seeder
                 'total_reads' => 750,
                 'story_category_id' => 1,
                 'image' => '/story-images/indonesian-folklore-keong-mas-traditional-art.png',
+                'verification_status' => 'approved',
             ],
             [
                 'title' => 'Timun Mas',
@@ -56,6 +59,7 @@ class StorySeeder extends Seeder
                 'total_reads' => 890,
                 'story_category_id' => 1,
                 'image' => '/story-images/indonesian-folklore-timun-mas-traditional-art.png',
+                'verification_status' => 'approved',
             ],
             [
                 'title' => 'Legenda Danau Toba Versi Kakek',
@@ -67,6 +71,7 @@ class StorySeeder extends Seeder
                 'total_reads' => 320,
                 'story_category_id' => 2,
                 'image' => '/story-images/indonesian-folklore-danau-toba-community-version.png',
+                'verification_status' => 'approved',
             ],
             [
                 'title' => 'Cerita Rakyat Kampung Halaman',
@@ -78,6 +83,7 @@ class StorySeeder extends Seeder
                 'total_reads' => 180,
                 'story_category_id' => 2,
                 'image' => '/story-images/indonesian-folklore-village-origin-community.png',
+                'verification_status' => 'approved',
             ],
         ];
 
