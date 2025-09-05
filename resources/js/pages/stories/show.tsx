@@ -21,6 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Toaster } from '@/components/ui/toaster';
 import Layout from '@/layouts/layout';
 import { Comment, Story, User } from '@/types';
+import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
 import { Head, Link, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import {
@@ -34,14 +35,17 @@ import {
     Loader2,
     MapPin,
     MessageCircle,
+    Pause,
     Play,
     Reply,
     Send,
     Share2,
+    Square,
     Trash2,
     Users,
+    Volume2,
 } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 interface StoryDetailPageProps {
@@ -439,6 +443,112 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
 
     const totalComments = getTotalCommentCount(comments);
 
+    // Di bagian state dan refs, ubah menjadi:
+    const [ttsLoading, setTtsLoading] = useState(false);
+    const [ttsPlaying, setTtsPlaying] = useState(false);
+    const [ttsPaused, setTtsPaused] = useState(false);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    // Ubah konfigurasi ElevenLabs dan handler-nya:
+    const elevenlabs = new ElevenLabsClient({
+        apiKey: import.meta.env.VITE_ELEVENLABS_API_KEY || '',
+    });
+
+    const voiceId = 'JBFqnCBsd6RMkjVDRZzb';
+
+    const handleTextToSpeech = async () => {
+        setTtsLoading(true);
+        try {
+            // Batasi teks jika terlalu panjang (ElevenLabs ada limit)
+            let text = story.content.replace(/\n+/g, ' ').trim();
+
+            // Batasi hingga 2500 karakter untuk menghindari error
+            if (text.length > 2500) {
+                text = text.substring(0, 2500) + '...';
+            }
+
+            console.log('Mengirim text ke ElevenLabs:', text.substring(0, 100) + '...');
+
+            const audioStream = await elevenlabs.textToSpeech.convert(voiceId, {
+                text,
+                modelId: 'eleven_multilingual_v2',
+                outputFormat: 'mp3_44100_128',
+            });
+
+            console.log('Audio stream diterima:', audioStream);
+
+            // Konversi stream ke blob untuk dimainkan di browser
+            const chunks: Uint8Array[] = [];
+            const reader = audioStream.getReader();
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+            }
+
+            // Gabungkan chunks menjadi satu blob
+            const audioBlob = new Blob(chunks, { type: 'audio/mpeg' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+
+            // Buat audio element baru
+            const audio = new Audio(audioUrl);
+            audioRef.current = audio;
+
+            // Setup event listeners
+            audio.onloadstart = () => console.log('Audio loading started');
+            audio.oncanplay = () => console.log('Audio can play');
+            audio.onplay = () => {
+                console.log('Audio playing');
+                setTtsPlaying(true);
+                setTtsPaused(false);
+            };
+            audio.onpause = () => {
+                console.log('Audio paused');
+                setTtsPlaying(false);
+                setTtsPaused(true);
+            };
+            audio.onended = () => {
+                console.log('Audio ended');
+                setTtsPlaying(false);
+                setTtsPaused(false);
+                URL.revokeObjectURL(audioUrl); // Cleanup
+            };
+            audio.onerror = (e) => {
+                console.error('Audio error:', e);
+                toast.error('Error memutar audio');
+                setTtsPlaying(false);
+            };
+
+            // Mulai putar audio
+            await audio.play();
+        } catch (error) {
+            console.error('TTS Error:', error);
+            toast.error('Gagal mengkonversi teks ke audio: ' + (error as Error).message);
+        } finally {
+            setTtsLoading(false);
+        }
+    };
+
+    const handlePauseTTS = () => {
+        if (audioRef.current) {
+            if (ttsPlaying) {
+                audioRef.current.pause();
+            } else if (ttsPaused) {
+                audioRef.current.play();
+            }
+        }
+    };
+
+    const handleStopTTS = () => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+            setTtsPlaying(false);
+            setTtsPaused(false);
+        }
+    };
+
     return (
         <Layout>
             <Toaster />
@@ -505,6 +615,44 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                         Ikuti Kuis ({story.quizzes.length} Soal)
                                     </Link>
                                 </Button>
+                            )}
+                            {/* Text to Speech Controls */}
+                            {!ttsPlaying && !ttsPaused && (
+                                <Button variant="outline" onClick={handleTextToSpeech} disabled={ttsLoading}>
+                                    {ttsLoading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Memproses Audio...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Volume2 className="mr-2 h-4 w-4" />
+                                            Dengarkan Audio
+                                        </>
+                                    )}
+                                </Button>
+                            )}
+
+                            {(ttsPlaying || ttsPaused) && (
+                                <>
+                                    <Button variant="outline" onClick={handlePauseTTS}>
+                                        {ttsPlaying ? (
+                                            <>
+                                                <Pause className="mr-2 h-4 w-4" />
+                                                Hentikan Audio
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Play className="mr-2 h-4 w-4" />
+                                                Lanjutkan Audio
+                                            </>
+                                        )}
+                                    </Button>
+                                    <Button variant="outline" onClick={handleStopTTS}>
+                                        <Square className="mr-2 h-4 w-4" />
+                                        Stop Audio
+                                    </Button>
+                                </>
                             )}
                             <Button variant="outline" size="icon" onClick={handleShare}>
                                 <Share2 className="h-4 w-4" />
