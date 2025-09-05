@@ -1,6 +1,6 @@
 # Tutur.id
 
-"Dari Kata ke Makna, Dari Cerita ke Jiwa."
+_"Dari Kata ke Makna, Dari Cerita ke Jiwa."_
 
 Tutur.id adalah platform interaktif yang didedikasikan untuk melestarikan dan menghidupkan kembali kekayaan budaya Indonesia, khususnya cerita rakyat dan makna nama-nama tradisional Nusantara, melalui pendekatan digital yang modern dan menarik.
 
@@ -24,17 +24,17 @@ Tutur.id mengatasi masalah di atas dengan menyediakan platform berbasis web yang
 *   Menyediakan fitur **Nama Nusantara** untuk mengeksplorasi dan memahami makna di balik nama-nama tradisional.
 *   Memungkinkan **partisipasi komunitas** melalui fitur berbagi cerita dari daerah masing-masing.
 *   Mengimplementasikan **gamifikasi** melalui sistem poin dan leaderboard untuk meningkatkan *engagement*.
-*   (Opsional) Menghadirkan **mode audio (TTS)** untuk pengalaman membaca yang lebih menarik dan inklusif.
+*   Menghadirkan **mode audio (TTS)** untuk pengalaman membaca yang lebih menarik dan inklusif.
 
 ## Fitur Inti Aplikasi
 
 ### 1. Cerita Rakyat
 *   Daftar cerita resmi dan cerita kontribusi dari komunitas.
 *   Halaman detail cerita dengan judul, isi singkat, asal daerah, dan tautan Google Maps terkait.
-*   (Opsional) Mode audio (Text-to-Speech) untuk mendengarkan cerita.
+*   Mode audio (Text-to-Speech) untuk mendengarkan cerita.
 
 ### 2. Kuis Edukatif
-*   5 soal interaktif per cerita resmi.
+*   Soal interaktif per cerita resmi.
 *   Menampilkan skor langsung setelah kuis dan menyimpan hasil pengguna.
 *   **Leaderboard** untuk melihat peringkat skor pengguna secara global.
 
@@ -65,9 +65,9 @@ Tutur.id mengatasi masalah di atas dengan menyediakan platform berbasis web yang
 *   **Frontend**: React 19 (JavaScript Library)
 *   **Integrasi Frontend-Backend**: Inertia.js
 *   **Styling**: Tailwind CSS dan ShadCN UI
-*   **Database**: MySQL / PostgreSQL
+*   **Database**: MySQL
 *   **Panel Admin**: Filament Admin Panel
-*   **Text-to-Speech (Opsional)**: Web Speech API
+*   **Text-to-Speech**: ElevenLabs
 *   **Deployment**: Web Hosting atau Shared Hosting
 
 ## Gambaran Halaman Utama
@@ -91,13 +91,9 @@ Tutur.id mengatasi masalah di atas dengan menyediakan platform berbasis web yang
 
 Kami menyambut kontribusi dari komunitas! Jika Anda tertarik untuk membantu mengembangkan Tutur.id, silakan ikuti panduan kontribusi yang akan kami sediakan.
 
-## Lisensi
-
-[Tentukan lisensi proyek Anda, misalnya MIT, GPL, dll.]
-
 ## Kontak
 
-Untuk pertanyaan atau dukungan, silakan hubungi [Alamat Email Anda] atau buka isu di repositori ini.
+Untuk pertanyaan atau dukungan, silakan hubungi zakidzulfikar051@gmail.com atau buka isu di repositori ini.
 
 ---
 © 2025 Tutur.id. Hak cipta dilindungi undang-undang.
