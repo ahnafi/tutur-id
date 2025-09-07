@@ -28,6 +28,7 @@ class TuturadminPanelProvider extends PanelProvider
             ->id('tuturadmin')
             ->path('tuturadmin')
             ->login()
+            ->profile(isSimple:false)
             ->colors([
                 'primary' => Color::Amber,
             ])
