@@ -479,7 +479,7 @@ export default function ProfilPage({ user, stats, contributions, achievements, r
                                                                 </DialogDescription>
                                                             </DialogHeader>
                                                             <DialogFooter>
-                                                                <Button variant="outline">Batal</Button>
+                                                                <Button className='hover:bg-red-600' variant="outline">Batal</Button>
                                                                 <Button variant="destructive" onClick={() => handleDelete(contribution)}>
                                                                     Ya, Hapus
                                                                 </Button>
@@ -628,7 +628,7 @@ export default function ProfilPage({ user, stats, contributions, achievements, r
                                             <div className="flex gap-2">
                                                 {isEditing ? (
                                                     <>
-                                                        <Button type="button" variant="outline" size="sm" onClick={cancelEdit}>
+                                                        <Button className='hover:bg-red-600' type="button" variant="outline" size="sm" onClick={cancelEdit}>
                                                             <X className="mr-2 h-4 w-4" />
                                                             Batal
                                                         </Button>
@@ -827,6 +827,7 @@ export default function ProfilPage({ user, stats, contributions, achievements, r
 
                                                         <div className="flex justify-end gap-3 pt-4">
                                                             <Button
+                                                                className='hover:bg-red-600'
                                                                 type="button"
                                                                 variant="outline"
                                                                 onClick={() => {

@@ -58,7 +58,7 @@ export function InteractiveMap({ mapData, onProvinceClick }: InteractiveMapProps
     };
 
     return (
-        <div className="relative h-96 w-full overflow-hidden rounded-lg border shadow-lg md:h-[500px] lg:h-[600px]">
+        <div className="relative h-96 w-full overflow-hidden rounded-lg border shadow-lg md:h-[500px] lg:h-[600px] z-20">
             <MapContainer center={[-2.5, 118] as LatLngExpression} zoom={5} style={{ height: '100%', width: '100%' }} className="rounded-lg">
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

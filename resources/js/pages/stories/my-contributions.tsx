@@ -179,7 +179,7 @@ export default function MyContributionsPage({ stories }: MyContributionsPageProp
                                                                         </DialogDescription>
                                                                     </DialogHeader>
                                                                     <DialogFooter>
-                                                                        <Button variant="outline">Batal</Button>
+                                                                        <Button className='hover:bg-red-600' variant="outline">Batal</Button>
                                                                         <Button variant="destructive" onClick={() => handleDelete(story)}>
                                                                             Ya, Hapus
                                                                         </Button>

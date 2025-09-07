@@ -289,6 +289,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                             Simpan
                                         </Button>
                                         <Button
+                                            className='hover:bg-red-600'
                                             size="sm"
                                             variant="outline"
                                             onClick={() => {
@@ -366,7 +367,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
-                                                            <AlertDialogCancel>Batal</AlertDialogCancel>
+                                                            <AlertDialogCancel className='hover:bg-red-600'>Batal</AlertDialogCancel>
                                                             <AlertDialogAction
                                                                 onClick={() => deleteComment(comment.id)}
                                                                 className="bg-red-600 hover:bg-red-700"
@@ -406,6 +407,7 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                                         )}
                                                     </Button>
                                                     <Button
+                                                        className='hover:bg-red-600'
                                                         size="sm"
                                                         variant="outline"
                                                         onClick={() => {

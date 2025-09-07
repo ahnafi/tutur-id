@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, LogOut, Map, Menu, Search, Trophy, User as UserIcon } from 'lucide-react';
-import { useState } from 'react';
+import { BookOpen, LogOut, Map, Menu, Moon, Search, Sun, Trophy, User as UserIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
@@ -22,15 +22,38 @@ export function Navigation() {
         { href: route('map.index'), label: 'Peta', icon: Map },
     ];
 
+    const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+    useEffect(() => {
+        // Cek preferensi awal
+        const saved = localStorage.getItem('appearance');
+        if (saved === 'dark' || (saved === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            setTheme('dark');
+            document.documentElement.classList.add('dark');
+        } else {
+            setTheme('light');
+            document.documentElement.classList.remove('dark');
+        }
+    }, []);
+
+    const toggleTheme = () => {
+        if (theme === 'light') {
+            setTheme('dark');
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            setTheme('light');
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+    };
+
     return (
         <nav className="section-padding-x sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex h-16 max-w-screen-xl items-center justify-between">
                 {/* Logo */}
                 <Link href={route('home')} className="flex items-center space-x-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80">
-                        <span className="text-sm font-bold text-primary-foreground">T</span>
-                    </div>
-                    <span className="text-xl font-bold text-primary">Tutur.id</span>
+                    <img src="/img/logo/tutur-with-text.png" alt="Tutur.id" className="h-8" />
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -74,6 +97,15 @@ export function Navigation() {
                             </Button>
                         </>
                     )}
+                    <Button
+                        className={theme === 'light' ? `bg-gray-800 text-gray-50 hover:bg-gray-900` : `bg-gray-200 text-gray-800 hover:bg-gray-300`}
+                        variant="ghost"
+                        size="icon"
+                        onClick={toggleTheme}
+                        aria-label="Toggle theme"
+                    >
+                        {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                    </Button>
                 </div>
 
                 {/* Mobile Menu */}
@@ -137,6 +169,19 @@ export function Navigation() {
                                         </Button>
                                     </>
                                 )}
+                                <Button variant="ghost" className={`w-full justify-start ${theme === 'light' ? `bg-gray-800 text-gray-50 hover:bg-gray-900` : `bg-gray-200 text-gray-800 hover:bg-gray-300`}`} onClick={toggleTheme}>
+                                    {theme === 'dark' ? (
+                                        <>
+                                            <Sun className="mr-2 h-4 w-4" />
+                                            Light Mode
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Moon className="mr-2 h-4 w-4" />
+                                            Dark Mode
+                                        </>
+                                    )}
+                                </Button>
                             </div>
                         </div>
                     </SheetContent>

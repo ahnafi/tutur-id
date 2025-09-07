@@ -9,10 +9,7 @@ export function Footer() {
                     {/* Brand Section */}
                     <div className="space-y-4">
                         <div className="flex items-center space-x-2">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80">
-                                <span className="text-sm font-bold text-primary-foreground">T</span>
-                            </div>
-                            <span className="text-xl font-bold text-primary">Tutur.id</span>
+                            <img src="/img/logo/tutur-with-text.png" alt="Tutur.id" className="h-8" />
                         </div>
                         <p className="text-sm text-balance text-muted-foreground">
                             Dari Kata ke Makna, Dari Cerita ke Jiwa. Platform interaktif untuk melestarikan budaya Indonesia.
@@ -78,7 +75,6 @@ export function Footer() {
                                 <Facebook className="h-4 w-4" />
                                 <span>Facebook</span>
                             </Link>
-
                         </div>
                     </div>
 
@@ -96,7 +92,7 @@ export function Footer() {
                             </div>
                             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                                 <span className="inline-flex items-center">
-                                    <Phone className="h-4 w-4 mr-1" />
+                                    <Phone className="mr-1 h-4 w-4" />
                                     <span>+62 812-3456-7890</span>
                                 </span>
                             </div>

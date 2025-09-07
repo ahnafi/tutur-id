@@ -255,7 +255,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                                                 variant="outline"
                                                                 size="sm"
                                                                 onClick={() => handleNameClick(name)}
-                                                                className="border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700"
+                                                                className="border-secondary bg-secondary text-gray-50 hover:bg-amber-50 hover:text-amber-700"
                                                             >
                                                                 Lihat Detail
                                                             </Button>
