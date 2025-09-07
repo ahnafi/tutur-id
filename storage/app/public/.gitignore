@@ -1,2 +1,4 @@
 *
 !.gitignore
+!story-images/
+!story-images/**
