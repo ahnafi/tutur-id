@@ -185,12 +185,12 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
             <Head title="Nama Nusantara" />
             <Toaster />
 
-            <div className="section-padding-x min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-8">
+            <div className="section-padding-x min-h-screen py-8">
                 <div className="container max-w-screen-xl">
                     {/* Header */}
                     <div className="mb-12 text-center">
-                        <h1 className="mb-4 text-4xl font-bold text-balance text-amber-900 md:text-5xl">Nama Nusantara</h1>
-                        <p className="mx-auto max-w-2xl text-lg text-pretty text-amber-700">
+                        <h1 className="mb-4 text-4xl font-bold text-balance text-amber-900 dark:text-gray-50 md:text-5xl">Nama Nusantara</h1>
+                        <p className="mx-auto max-w-2xl text-lg text-pretty text-amber-700 dark:text-gray-300">
                             Temukan makna mendalam dari nama-nama tradisional Indonesia. Jelajahi warisan budaya yang tersimpan dalam setiap nama.
                         </p>
                     </div>
@@ -200,7 +200,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                         <div className="space-y-6 lg:col-span-2">
                             <Card className="border-amber-200 shadow-lg">
                                 <CardHeader>
-                                    <CardTitle className="flex items-center gap-2 text-amber-900">
+                                    <CardTitle className="flex items-center gap-2 text-amber-900 dark:text-gray-50">
                                         <Search className="h-5 w-5" />
                                         Cari Nama Tradisional
                                     </CardTitle>
@@ -217,7 +217,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                             onKeyPress={(e) => e.key === 'Enter' && handleManualSearch()}
                                             className="border-amber-200 focus:border-amber-400"
                                         />
-                                        <Button onClick={handleManualSearch} className="bg-amber-600 hover:bg-amber-700">
+                                        <Button onClick={handleManualSearch} className="bg-amber-600 hover:bg-amber-700 dark:text-gray-50">
                                             Cari
                                         </Button>
                                     </div>
@@ -227,7 +227,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                             {/* Search Results */}
                             {names.data.length > 0 && (
                                 <div className="space-y-4">
-                                    <h3 className="text-xl font-semibold text-amber-900">
+                                    <h3 className="text-xl font-semibold text-amber-900 dark:text-gray-50">
                                         {searchQuery ? `Hasil Pencarian "${searchQuery}" (${names.total})` : `Semua Nama (${names.total})`}
                                     </h3>
 
@@ -237,8 +237,8 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                                 <CardContent className="p-6">
                                                     <div className="mb-3 flex items-start justify-between">
                                                         <div className="flex-1">
-                                                            <h4 className="text-xl font-bold text-amber-900">{name.name}</h4>
-                                                            <div className="mt-1 flex items-center gap-2 text-sm text-amber-600">
+                                                            <h4 className="text-xl font-bold text-amber-900 dark:text-gray-50">{name.name}</h4>
+                                                            <div className="mt-1 flex items-center gap-2 text-sm text-amber-600 dark:text-gray-400">
                                                                 <MapPin className="h-4 w-4" />
                                                                 {name.origin}
                                                                 {name.views > 0 && (
@@ -255,15 +255,15 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                                                 variant="outline"
                                                                 size="sm"
                                                                 onClick={() => handleNameClick(name)}
-                                                                className="border-secondary bg-secondary text-gray-50 hover:bg-amber-50 hover:text-amber-700"
+                                                                className="border-secondary bg-secondary text-gray-50 hover:bg-amber-50 hover:text-amber-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-50"
                                                             >
                                                                 Lihat Detail
                                                             </Button>
                                                         </div>
                                                     </div>
-                                                    <p className="mb-3 text-amber-800">{name.meaning}</p>
+                                                    <p className="mb-3 text-amber-800 dark:text-gray-300">{name.meaning}</p>
                                                     {name.category && (
-                                                        <Badge variant="outline" className="border-amber-300 text-amber-700">
+                                                        <Badge variant="outline" className="border-amber-300 text-amber-700 dark:border-gray-700 dark:text-gray-400">
                                                             {name.category.name}
                                                         </Badge>
                                                     )}
@@ -293,14 +293,14 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                             {/* AI Name Generator */}
                             <Card className="border-amber-200 shadow-lg">
                                 <CardHeader>
-                                    <CardTitle className="flex items-center gap-2 text-amber-900">
+                                    <CardTitle className="flex items-center gap-2 text-amber-900 dark:text-gray-50">
                                         <Bot className="h-5 w-5" />
                                         Inspirasi Nama AI
                                     </CardTitle>
                                     <CardDescription>Dapatkan nama tradisional berdasarkan karakteristik yang Anda inginkan</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <Button onClick={() => setIsAIDialogOpen(true)} className="w-full bg-purple-600 hover:bg-purple-700">
+                                    <Button onClick={() => setIsAIDialogOpen(true)} className="w-full bg-purple-600 hover:bg-purple-700 dark:text-gray-50">
                                         <Sparkles className="mr-2 h-4 w-4" />
                                         Temukan Inspirasi
                                     </Button>
@@ -357,7 +357,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                             {/* Trending Names */}
                             <Card className="border-amber-200 shadow-lg">
                                 <CardHeader>
-                                    <CardTitle className="text-amber-900">Nama Trending</CardTitle>
+                                    <CardTitle className="text-amber-900 dark:text-gray-50">Nama Trending</CardTitle>
                                     <CardDescription>Nama-nama yang paling banyak dilihat</CardDescription>
                                 </CardHeader>
                                 <CardContent>
@@ -372,8 +372,8 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                                     {index + 1}
                                                 </div>
                                                 <div className="flex-1">
-                                                    <p className="font-medium text-amber-900">{name.name}</p>
-                                                    <div className="flex items-center gap-1 text-xs text-amber-600">
+                                                    <p className="font-medium text-amber-900 dark:text-gray-50">{name.name}</p>
+                                                    <div className="flex items-center gap-1 text-xs text-amber-600 dark:text-gray-400">
                                                         <span>{name.origin}</span>
                                                         {name.views > 0 && (
                                                             <>
@@ -394,17 +394,17 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                             <Card className="border-amber-200 shadow-lg">
                                 <CardContent className="p-6">
                                     <div className="text-center">
-                                        <div className="text-2xl font-bold text-amber-900">{totalNames}</div>
-                                        <div className="text-sm text-amber-600">Nama Tersedia</div>
+                                        <div className="text-2xl font-bold text-amber-900 dark:text-gray-50">{totalNames}</div>
+                                        <div className="text-sm text-amber-600 dark:text-gray-400">Nama Tersedia</div>
                                     </div>
                                     <div className="mt-4 grid grid-cols-2 gap-4 border-t border-amber-200 pt-4">
                                         <div className="text-center">
-                                            <div className="text-lg font-semibold text-amber-900">{favorites.length}</div>
-                                            <div className="text-xs text-amber-600">Favorit Anda</div>
+                                            <div className="text-lg font-semibold text-amber-900 dark:text-gray-50">{favorites.length}</div>
+                                            <div className="text-xs text-amber-600 dark:text-gray-400">Favorit Anda</div>
                                         </div>
                                         <div className="text-center">
-                                            <div className="text-lg font-semibold text-amber-900">{names.data.length}</div>
-                                            <div className="text-xs text-amber-600">Hasil Halaman Ini</div>
+                                            <div className="text-lg font-semibold text-amber-900 dark:text-gray-50">{names.data.length}</div>
+                                            <div className="text-xs text-amber-600 dark:text-gray-400">Hasil Halaman Ini</div>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -418,13 +418,13 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
             <Dialog open={isDialogOpen} onOpenChange={() => {}}>
                 <DialogContent className="max-w-2xl [&>button]:hidden">
                     <DialogHeader>
-                        <DialogTitle className="flex items-center justify-between text-2xl text-amber-900">
+                        <DialogTitle className="flex items-center justify-between text-2xl text-amber-900 dark:text-gray-50">
                             {selectedName?.name}
                             <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setIsDialogOpen(false)}
-                                className="text-red-600 hover:bg-red-600 hover:text-gray-50"
+                                className="text-red-600 hover:bg-red-600 hover:text-gray-50 dark:text-gray-300 dark:hover:text-gray-50"
                             >
                                 <X className="h-4 w-4" />
                             </Button>
@@ -433,27 +433,27 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
 
                     {selectedName && (
                         <div className="space-y-6">
-                            <div className="flex items-center gap-4 text-sm text-amber-600">
+                            <div className="flex items-center gap-4 text-sm text-amber-600 dark:text-gray-400">
                                 <div className="flex items-center gap-1">
                                     <MapPin className="h-4 w-4" />
                                     {selectedName.origin}
                                 </div>
                                 {selectedName.category && (
-                                    <Badge variant="outline" className="border-amber-300 text-amber-700">
+                                    <Badge variant="outline" className="border-amber-300 text-amber-700 dark:border-gray-700 dark:text-gray-400">
                                         {selectedName.category.name}
                                     </Badge>
                                 )}
                             </div>
 
                             <div>
-                                <h3 className="mb-2 text-lg font-semibold text-amber-900">Arti Nama</h3>
-                                <p className="text-amber-800">{selectedName.meaning}</p>
+                                <h3 className="mb-2 text-lg font-semibold text-amber-900 dark:text-gray-50">Arti Nama</h3>
+                                <p className="text-amber-800 dark:text-gray-400">{selectedName.meaning}</p>
                             </div>
 
                             {selectedName.description && (
                                 <div>
-                                    <h3 className="mb-2 text-lg font-semibold text-amber-900">Deskripsi</h3>
-                                    <p className="leading-relaxed text-amber-800">{selectedName.description}</p>
+                                    <h3 className="mb-2 text-lg font-semibold text-amber-900 dark:text-gray-50">Deskripsi</h3>
+                                    <p className="leading-relaxed text-amber-800 dark:text-gray-400">{selectedName.description}</p>
                                 </div>
                             )}
                         </div>

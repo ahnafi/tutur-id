@@ -40,11 +40,11 @@ export function Navigation() {
         if (theme === 'light') {
             setTheme('dark');
             document.documentElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
+            localStorage.setItem('appearance', 'dark');
         } else {
             setTheme('light');
             document.documentElement.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
+            localStorage.setItem('appearance', 'light');
         }
     };
 
@@ -98,7 +98,7 @@ export function Navigation() {
                         </>
                     )}
                     <Button
-                        className={theme === 'light' ? `bg-gray-800 text-gray-50 hover:bg-gray-900` : `bg-gray-200 text-gray-800 hover:bg-gray-300`}
+                        className={theme === 'light' ? `bg-gray-800 text-gray-50 hover:bg-gray-900` : `bg-gray-200 text-gray-800 hover:bg-gray-300 dark:text-gray-900 dark:hover:bg-gray-300`}
                         variant="ghost"
                         size="icon"
                         onClick={toggleTheme}
@@ -169,7 +169,7 @@ export function Navigation() {
                                         </Button>
                                     </>
                                 )}
-                                <Button variant="ghost" className={`w-full justify-start ${theme === 'light' ? `bg-gray-800 text-gray-50 hover:bg-gray-900` : `bg-gray-200 text-gray-800 hover:bg-gray-300`}`} onClick={toggleTheme}>
+                                <Button variant="ghost" className={`w-full justify-start ${theme === 'light' ? `bg-gray-800 text-gray-50 hover:bg-gray-900` : `bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-800`}`} onClick={toggleTheme}>
                                     {theme === 'dark' ? (
                                         <>
                                             <Sun className="mr-2 h-4 w-4" />

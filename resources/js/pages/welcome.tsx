@@ -315,8 +315,8 @@ export default function HomePage({ featuredStories, popularNames, stats, recentS
                 <section className="section-padding-x bg-primary py-20 text-primary-foreground">
                     <div className="container max-w-screen-xl text-center">
                         <div className="mx-auto max-w-2xl space-y-6">
-                            <h2 className="text-3xl font-bold lg:text-4xl">Mulai Perjalanan Budayamu</h2>
-                            <p className="text-xl opacity-90">
+                            <h2 className="text-3xl font-bold lg:text-4xl dark:text-gray-50">Mulai Perjalanan Budayamu</h2>
+                            <p className="text-xl opacity-90 dark:text-gray-200">
                                 Bergabunglah dengan {formatNumber(stats.total_users)} orang yang telah menemukan kembali kekayaan budaya Indonesia
                             </p>
                             <div className="flex flex-col justify-center gap-4 sm:flex-row">
@@ -326,7 +326,7 @@ export default function HomePage({ featuredStories, popularNames, stats, recentS
                                 <Button
                                     size="lg"
                                     variant="outline"
-                                    className="border-primary-foreground bg-transparent text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                                    className="border-primary-foreground bg-transparent text-primary-foreground hover:bg-primary-foreground hover:text-primary dark:text-gray-50 dark:hover:bg-gray-50 dark:hover:text-primary dark:border-gray-50"
                                     asChild
                                 >
                                     <Link href="/cerita">Mulai Membaca</Link>

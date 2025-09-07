@@ -520,14 +520,14 @@ export default function ProfilPage({ user, stats, contributions, achievements, r
                                                 <div
                                                     key={achievement.id}
                                                     className={`rounded-lg border p-4 ${
-                                                        achievement.earned ? 'border-yellow-200 bg-gradient-to-r from-yellow-50 to-orange-50' : ''
+                                                        achievement.earned ? 'border-yellow-200 bg-gradient-to-r from-yellow-50 to-orange-50 dark:border-yellow-900 dark:bg-gradient-to-r dark:from-yellow-900 dark:to-orange-900' : ''
                                                     }`}
                                                 >
                                                     <div className="flex items-start gap-3">
                                                         <div
                                                             className={`flex h-12 w-12 items-center justify-center rounded-full ${
                                                                 achievement.earned
-                                                                    ? 'bg-yellow-100 text-yellow-600'
+                                                                    ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300'
                                                                     : 'bg-muted text-muted-foreground'
                                                             }`}
                                                         >
@@ -536,11 +536,11 @@ export default function ProfilPage({ user, stats, contributions, achievements, r
                                                         <div className="flex-1">
                                                             <div className="mb-1 flex items-center gap-2">
                                                                 <h3 className="font-medium">{achievement.title}</h3>
-                                                                {achievement.earned && <Badge className="bg-yellow-500 text-xs">Earned</Badge>}
+                                                                {achievement.earned && <Badge className="bg-yellow-500 text-xs dark:bg-yellow-900 dark:text-yellow-300">Earned</Badge>}
                                                             </div>
-                                                            <p className="mb-2 text-sm text-muted-foreground">{achievement.description}</p>
+                                                            <p className={`mb-2 text-sm text-muted-foreground ${achievement.earned ? 'dark:text-yellow-300' : ''}`}>{achievement.description}</p>
                                                             {achievement.earned ? (
-                                                                <p className="text-xs text-green-600">Diraih {achievement.earnedAt}</p>
+                                                                <p className="text-xs text-green-600 dark:text-green-300">Diraih {achievement.earnedAt}</p>
                                                             ) : (
                                                                 <div className="space-y-1">
                                                                     <div className="flex justify-between text-xs">

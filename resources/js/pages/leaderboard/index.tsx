@@ -63,14 +63,16 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
     const getRankIcon = (rank: number) => {
         switch (rank) {
             case 1:
-                return <Crown className="h-6 w-6 text-yellow-500" />;
+                return <Crown className="h-6 w-6 text-yellow-500 dark:text-yellow-400" />;
             case 2:
-                return <Medal className="h-6 w-6 text-gray-400" />;
+                return <Medal className="h-6 w-6 text-gray-400 dark:text-gray-300" />;
             case 3:
-                return <Medal className="h-6 w-6 text-amber-600" />;
+                return <Medal className="h-6 w-6 text-amber-600 dark:text-amber-400" />;
             default:
                 return (
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-800">{rank}</div>
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-800 dark:bg-amber-600 dark:text-gray-50">
+                        {rank}
+                    </div>
                 );
         }
     };
@@ -91,19 +93,19 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
         <Layout>
             <Head title="Papan Peringkat" />
 
-            <div className="section-padding-x min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-8">
+            <div className="section-padding-x min-h-screen py-8">
                 <div className="container max-w-screen-xl">
                     {/* Header */}
                     <div className="mb-8 text-center">
-                        <h1 className="mb-4 text-4xl font-bold text-balance text-amber-900 md:text-5xl">Papan Peringkat</h1>
-                        <p className="mx-auto max-w-2xl text-lg text-pretty text-amber-700">
+                        <h1 className="mb-4 text-4xl font-bold text-balance text-amber-900 md:text-5xl dark:text-gray-50">Papan Peringkat</h1>
+                        <p className="mx-auto max-w-2xl text-lg text-pretty text-amber-700 dark:text-gray-300">
                             Lihat siapa yang paling aktif dalam menjelajahi warisan budaya Indonesia
                         </p>
                     </div>
 
                     {/* Time Filter */}
                     <div className="mb-8 flex justify-center">
-                        <div className="flex rounded-lg border border-amber-200 bg-white p-1">
+                        <div className="flex rounded-lg border border-amber-200 bg-white p-1 dark:bg-gray-800">
                             {[
                                 { key: 'weekly', label: 'Mingguan' },
                                 { key: 'monthly', label: 'Bulanan' },
@@ -116,7 +118,9 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
                                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                     onClick={() => setTimeFilter(filter.key as any)}
                                     className={
-                                        timeFilter === filter.key ? 'bg-amber-600 hover:bg-amber-700' : 'hover:bg-amber-50 hover:text-amber-700'
+                                        timeFilter === filter.key
+                                            ? 'bg-amber-600 hover:bg-amber-700'
+                                            : 'hover:bg-amber-50 hover:text-amber-700 dark:hover:bg-gray-700'
                                     }
                                 >
                                     {filter.label}
@@ -134,22 +138,24 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
                                     {leaderboard.slice(0, 3).map((user, index) => (
                                         <Card
                                             key={user.id}
-                                            className={`border-2 ${index === 0 ? 'border-yellow-300 bg-gradient-to-br from-yellow-50 to-amber-50' : index === 1 ? 'border-gray-300 bg-gradient-to-br from-gray-50 to-slate-50' : 'border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50'} ${index === 0 ? 'transform md:order-2 md:scale-105' : index === 1 ? 'md:order-1' : 'md:order-3'}`}
+                                            className={`border-2 ${index === 0 ? 'border-yellow-300 bg-gradient-to-br from-yellow-50 to-amber-50 dark:border-yellow-600 dark:bg-gradient-to-br dark:from-yellow-600 dark:to-amber-600' : index === 1 ? 'border-gray-300 bg-gradient-to-br from-gray-50 to-slate-50 dark:border-gray-600 dark:bg-gradient-to-br dark:from-gray-600 dark:to-slate-600' : 'border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50 dark:border-amber-600 dark:bg-gradient-to-br dark:from-amber-600 dark:to-orange-600'} ${index === 0 ? 'transform md:order-2 md:scale-105' : index === 1 ? 'md:order-1' : 'md:order-3'}`}
                                         >
                                             <CardContent className="p-6 text-center">
                                                 <div className="mb-4">{getRankIcon(user.rank)}</div>
                                                 <Avatar className="mx-auto mb-3 h-16 w-16">
-                                                    <AvatarFallback className="bg-amber-600 text-lg font-bold text-white">
+                                                    <AvatarFallback className="bg-amber-600 text-lg font-bold text-white dark:bg-amber-400">
                                                         {user.name
                                                             .split(' ')
                                                             .map((n) => n[0])
                                                             .join('')}
                                                     </AvatarFallback>
                                                 </Avatar>
-                                                <h3 className="mb-1 font-bold text-amber-900">{user.name}</h3>
-                                                <div className="mb-2 text-2xl font-bold text-amber-800">{user.score.toLocaleString()}</div>
+                                                <h3 className="mb-1 font-bold text-amber-900 dark:text-gray-50">{user.name}</h3>
+                                                <div className="mb-2 text-2xl font-bold text-amber-800 dark:text-gray-300">
+                                                    {user.score.toLocaleString()}
+                                                </div>
                                                 <Badge className={getBadgeColor(user.badge)}>{user.badge}</Badge>
-                                                <div className="mt-2 flex items-center justify-center gap-1 text-green-600">
+                                                <div className="mt-2 flex items-center justify-center gap-1 text-green-600 dark:text-green-400">
                                                     <TrendingUp className="h-4 w-4" />
                                                     <span className="text-sm">+{user.weeklyGain}</span>
                                                 </div>
@@ -162,15 +168,18 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
                             {/* Rest of Leaderboard */}
                             <Card className="border-amber-200">
                                 <CardHeader>
-                                    <CardTitle className="text-amber-900">Peringkat Lengkap</CardTitle>
+                                    <CardTitle className="text-amber-900 dark:text-gray-50">Peringkat Lengkap</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-4">
                                         {leaderboard.map((user) => (
-                                            <div key={user.id} className="flex items-center gap-4 rounded-lg p-4 transition-colors hover:bg-amber-50">
+                                            <div
+                                                key={user.id}
+                                                className="flex items-center gap-4 rounded-lg p-4 transition-colors hover:bg-amber-50 dark:hover:bg-gray-800"
+                                            >
                                                 <div className="flex w-8 items-center justify-center">{getRankIcon(user.rank)}</div>
                                                 <Avatar className="h-10 w-10">
-                                                    <AvatarFallback className="bg-amber-600 font-bold text-white">
+                                                    <AvatarFallback className="bg-amber-600 font-bold text-white dark:bg-amber-400">
                                                         {user.name
                                                             .split(' ')
                                                             .map((n) => n[0])
@@ -178,22 +187,24 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
                                                     </AvatarFallback>
                                                 </Avatar>
                                                 <div className="flex-1">
-                                                    <h4 className="font-semibold text-amber-900">{user.name}</h4>
-                                                    <div className="flex items-center gap-4 text-sm text-amber-600">
+                                                    <h4 className="font-semibold text-amber-900 dark:text-gray-50">{user.name}</h4>
+                                                    <div className="flex items-center gap-4 text-sm text-amber-600 dark:text-gray-400">
                                                         <span>{user.storiesRead} cerita</span>
                                                         <span>{user.quizzesTaken} kuis</span>
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <div className="font-bold text-amber-900">{user.score.toLocaleString()}</div>
-                                                    <div className="flex items-center gap-1 text-sm text-green-600">
+                                                    <div className="font-bold text-amber-900 dark:text-gray-50">{user.score.toLocaleString()}</div>
+                                                    <div className="flex items-center gap-1 text-sm text-green-600 dark:text-green-400">
                                                         <TrendingUp className="h-3 w-3" />+{user.weeklyGain}
                                                     </div>
                                                 </div>
                                             </div>
                                         ))}
                                         {leaderboard.length === 0 && (
-                                            <div className="py-8 text-center text-amber-600">Belum ada data leaderboard untuk periode ini.</div>
+                                            <div className="py-8 text-center text-amber-600 dark:text-gray-400">
+                                                Belum ada data leaderboard untuk periode ini.
+                                            </div>
                                         )}
                                     </div>
                                 </CardContent>
@@ -206,14 +217,14 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
                             {currentUser && (
                                 <Card className="border-amber-200">
                                     <CardHeader>
-                                        <CardTitle className="text-amber-900">Peringkat Anda</CardTitle>
+                                        <CardTitle className="text-amber-900 dark:text-gray-50">Peringkat Anda</CardTitle>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="text-center">
-                                            <div className="mb-2 text-3xl font-bold text-amber-900">#{currentUser.rank}</div>
-                                            <div className="mb-2 text-lg font-semibold text-amber-800">{currentUser.score.toLocaleString()} poin</div>
+                                            <div className="mb-2 text-3xl font-bold text-amber-900 dark:text-gray-50">#{currentUser.rank}</div>
+                                            <div className="mb-2 text-lg font-semibold text-amber-800 dark:text-gray-300">{currentUser.score.toLocaleString()} poin</div>
                                             <Badge className={`${getBadgeColor(currentUser.badge)} mb-3`}>{currentUser.badge}</Badge>
-                                            <div className="text-sm text-amber-600">
+                                            <div className="text-sm text-amber-600 dark:text-gray-400">
                                                 <div>{currentUser.storiesRead} cerita dibaca</div>
                                                 <div>{currentUser.quizzesTaken} kuis diselesaikan</div>
                                             </div>
@@ -225,7 +236,7 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
                             {/* Achievement System */}
                             <Card className="border-amber-200">
                                 <CardHeader>
-                                    <CardTitle className="text-amber-900">Sistem Badge</CardTitle>
+                                    <CardTitle className="text-amber-900 dark:text-gray-50">Sistem Badge</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-3">
@@ -233,8 +244,8 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
                                             <div key={badge} className="flex items-center gap-3">
                                                 <Star className="h-5 w-5 text-yellow-500" />
                                                 <div>
-                                                    <div className="font-medium text-amber-900">{badge}</div>
-                                                    <div className="text-xs text-amber-600">{description}</div>
+                                                    <div className="font-medium text-amber-900 dark:text-gray-50">{badge}</div>
+                                                    <div className="text-xs text-amber-600 dark:text-gray-400">{description}</div>
                                                 </div>
                                             </div>
                                         ))}
@@ -246,13 +257,13 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
                             {weeklyProgress && (
                                 <Card className="border-amber-200">
                                     <CardHeader>
-                                        <CardTitle className="text-amber-900">Tantangan Mingguan</CardTitle>
+                                        <CardTitle className="text-amber-900 dark:text-gray-50">Tantangan Mingguan</CardTitle>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="space-y-3">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-sm text-amber-700">Baca 5 cerita</span>
-                                                <span className="text-sm font-medium text-amber-900">
+                                                <span className="text-sm text-amber-700 dark:text-gray-300">Baca 5 cerita</span>
+                                                <span className="text-sm font-medium text-amber-900 dark:text-gray-50">
                                                     {weeklyProgress.current}/{weeklyProgress.target}
                                                 </span>
                                             </div>
@@ -262,7 +273,7 @@ export default function LeaderboardPage({ leaderboard, currentUser, timeFilter: 
                                                     style={{ width: `${(weeklyProgress.current / weeklyProgress.target) * 100}%` }}
                                                 ></div>
                                             </div>
-                                            <div className="text-xs text-amber-600">
+                                            <div className="text-xs text-amber-600 dark:text-gray-400">
                                                 {weeklyProgress.completed ? (
                                                     <span className="font-medium text-green-600">✓ Tantangan selesai! +100 poin bonus</span>
                                                 ) : (

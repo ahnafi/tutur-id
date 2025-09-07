@@ -49,7 +49,7 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
                     variant="outline"
                     size="sm"
                     onClick={() => handlePageChange(`${data.path}?page=1`)}
-                    className="border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700"
+                    className="border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700 dark:text-gray-400 dark:border-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-50"
                 >
                     1
                 </Button>,
@@ -57,7 +57,7 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
 
             if (currentPage > 4) {
                 pages.push(
-                    <span key="ellipsis1" className="px-2 text-amber-600">
+                    <span key="ellipsis1" className="px-2 text-amber-600 dark:text-gray-400">
                         ...
                     </span>,
                 );
@@ -74,8 +74,8 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
                     onClick={() => handlePageChange(`${data.path}?page=${i}`)}
                     className={
                         i === currentPage
-                            ? 'bg-amber-600 hover:bg-amber-700'
-                            : 'border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700'
+                            ? 'bg-amber-600 hover:bg-amber-700 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-50'
+                            : 'border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-50'
                     }
                 >
                     {i}
@@ -113,7 +113,7 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
 
     return (
         <div className="very-small-font-size flex flex-col-reverse items-center justify-between gap-2 md:flex-row md:gap-0">
-            <div className="text-amber-600">
+            <div className="text-amber-600 dark:text-gray-400">
                 Menampilkan {data.from} - {data.to} dari {data.total} hasil
             </div>
 
@@ -124,14 +124,14 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
                     size="sm"
                     onClick={() => handlePageChange(data.prev_page_url)}
                     disabled={!data.prev_page_url}
-                    className="very-small-font-size border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700 disabled:opacity-50"
+                    className="very-small-font-size border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700 disabled:opacity-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-50 dark:border-gray-700 dark:disabled:opacity-50"
                 >
                     <ChevronLeft className="mr-1 hidden h-4 w-4 md:block" />
                     Sebelumnya
                 </Button>
 
                 {/* Page Numbers */}
-                <div className="flex items-center gap-1">{renderPageNumbers()}</div>
+                <div className="flex items-center gap-1 dark:text-gray-400">{renderPageNumbers()}</div>
 
                 {/* Next Button */}
                 <Button
@@ -139,7 +139,7 @@ export function Pagination({ data, preserveQuery = true }: PaginationProps) {
                     size="sm"
                     onClick={() => handlePageChange(data.next_page_url)}
                     disabled={!data.next_page_url}
-                    className="very-small-font-size border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700 disabled:opacity-50"
+                    className="very-small-font-size border-amber-300 text-amber-700 hover:bg-amber-50 hover:text-amber-700 disabled:opacity-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-50 dark:border-gray-700 dark:disabled:opacity-50"
                 >
                     Selanjutnya
                     <ChevronRight className="ml-1 hidden h-4 w-4 md:block" />
