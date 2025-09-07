@@ -1,3 +1,5 @@
+![Tutur.id](https://ibb.co.com/hFrtv6N7)
+
 # Tutur.id
 
 _"Dari Kata ke Makna, Dari Cerita ke Jiwa."_
@@ -25,6 +27,7 @@ Tutur.id mengatasi masalah di atas dengan menyediakan platform berbasis web yang
 *   Memungkinkan **partisipasi komunitas** melalui fitur berbagi cerita dari daerah masing-masing.
 *   Mengimplementasikan **gamifikasi** melalui sistem poin dan leaderboard untuk meningkatkan *engagement*.
 *   Menghadirkan **mode audio (TTS)** untuk pengalaman membaca yang lebih menarik dan inklusif.
+*   Menyediakan **Peta Cerita Interaktif** untuk eksplorasi cerita rakyat berdasarkan provinsi secara geografis.
 
 ## Fitur Inti Aplikasi
 
@@ -47,7 +50,12 @@ Tutur.id mengatasi masalah di atas dengan menyediakan platform berbasis web yang
 *   Fitur "Random Nama Unik" untuk menemukan inspirasi nama.
 *   Kemampuan untuk menyimpan nama-nama favorit.
 
-### 5. Autentikasi
+### 5. Peta Cerita Interaktif
+*   Halaman peta Indonesia yang menampilkan marker provinsi dengan cerita rakyat.
+*   Klik provinsi untuk melihat daftar cerita dari wilayah tersebut.
+*   Eksplorasi geografis budaya secara visual dan interaktif.
+
+### 6. Autentikasi
 *   Sistem registrasi dan login untuk pengguna.
 *   Sistem role: Admin (mengelola konten dan pengguna) dan User (pengguna biasa).
 
@@ -58,6 +66,7 @@ Tutur.id mengatasi masalah di atas dengan menyediakan platform berbasis web yang
 *   **Gamifikasi Interaktif**: Kuis dan leaderboard untuk meningkatkan interaksi dan daya tarik.
 *   **Partisipasi Komunitas**: Memberdayakan pengguna untuk berkontribusi dan berbagi cerita mereka sendiri.
 *   **Inovasi Audio (Opsional)**: Pilihan mode audio TTS untuk pengalaman yang berbeda.
+*   **Eksplorasi Geografis**: Peta interaktif untuk penjelajahan cerita berdasarkan provinsi.
 
 ## Tumpukan Teknologi
 
@@ -68,16 +77,18 @@ Tutur.id mengatasi masalah di atas dengan menyediakan platform berbasis web yang
 *   **Database**: MySQL
 *   **Panel Admin**: Filament Admin Panel
 *   **Text-to-Speech**: ElevenLabs
+*   **Peta Interaktif**: Leaflet.js + React Leaflet
 *   **Deployment**: Web Hosting atau Shared Hosting
 
 ## Gambaran Halaman Utama
 
 *   **Landing Page**: Logo, tagline, CTA Login/Register, dan *preview* cerita & nama.
-*   **Dashboard**: Menu utama yang mengarahkan ke Cerita, Nama Nusantara, dan Leaderboard.
+*   **Dashboard**: Menu utama yang mengarahkan ke Cerita, Nama Nusantara, Leaderboard, dan Peta Cerita.
 *   **Halaman Cerita**: Daftar cerita dengan opsi filter (resmi, komunitas).
 *   **Detail Cerita**: Konten cerita, informasi lokasi (Google Maps), dan kuis (untuk cerita resmi).
 *   **Halaman Nama Nusantara**: Form pencarian nama dan hasil arti.
 *   **Leaderboard**: Peringkat skor kuis pengguna.
+*   **Peta Cerita Interaktif**: Eksplorasi cerita rakyat berdasarkan provinsi secara visual.
 *   **Admin Panel**: Antarmuka untuk pengelolaan cerita resmi, kuis, moderasi cerita pengguna, dan manajemen pengguna.
 
 ## Fitur Lanjutan (Opsional)
