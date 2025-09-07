@@ -214,7 +214,7 @@ export default function HomePage({ featuredStories, popularNames, stats, recentS
                                             </div>
                                         </div>
                                         <CardHeader>
-                                            <div className="flex items-center justify-between">
+                                            <div className="flex items-center justify-between pt-4">
                                                 <Badge variant="secondary">{story.origin_place}</Badge>
                                                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                                     <Star className="h-4 w-4 fill-current text-yellow-500" />
