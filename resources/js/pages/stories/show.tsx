@@ -467,15 +467,11 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                 text = text.substring(0, 2500) + '...';
             }
 
-            console.log('Mengirim text ke ElevenLabs:', text.substring(0, 100) + '...');
-
             const audioStream = await elevenlabs.textToSpeech.convert(voiceId, {
                 text,
                 modelId: 'eleven_multilingual_v2',
                 outputFormat: 'mp3_44100_128',
             });
-
-            console.log('Audio stream diterima:', audioStream);
 
             // Konversi stream ke blob untuk dimainkan di browser
             const chunks: Uint8Array[] = [];
@@ -496,20 +492,15 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
             audioRef.current = audio;
 
             // Setup event listeners
-            audio.onloadstart = () => console.log('Audio loading started');
-            audio.oncanplay = () => console.log('Audio can play');
             audio.onplay = () => {
-                console.log('Audio playing');
                 setTtsPlaying(true);
                 setTtsPaused(false);
             };
             audio.onpause = () => {
-                console.log('Audio paused');
                 setTtsPlaying(false);
                 setTtsPaused(true);
             };
             audio.onended = () => {
-                console.log('Audio ended');
                 setTtsPlaying(false);
                 setTtsPaused(false);
                 URL.revokeObjectURL(audioUrl); // Cleanup
@@ -617,42 +608,53 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                                 </Button>
                             )}
                             {/* Text to Speech Controls */}
-                            {!ttsPlaying && !ttsPaused && (
-                                <Button variant="outline" onClick={handleTextToSpeech} disabled={ttsLoading}>
-                                    {ttsLoading ? (
+                            {user ? (
+                                <>
+                                    {!ttsPlaying && !ttsPaused && (
+                                        <Button variant="outline" onClick={handleTextToSpeech} disabled={ttsLoading}>
+                                            {ttsLoading ? (
+                                                <>
+                                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                    Memproses Audio...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Volume2 className="mr-2 h-4 w-4" />
+                                                    Dengarkan Audio
+                                                </>
+                                            )}
+                                        </Button>
+                                    )}
+
+                                    {(ttsPlaying || ttsPaused) && (
                                         <>
-                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                            Memproses Audio...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Volume2 className="mr-2 h-4 w-4" />
-                                            Dengarkan Audio
+                                            <Button variant="outline" onClick={handlePauseTTS}>
+                                                {ttsPlaying ? (
+                                                    <>
+                                                        <Pause className="mr-2 h-4 w-4" />
+                                                        Hentikan Audio
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Play className="mr-2 h-4 w-4" />
+                                                        Lanjutkan Audio
+                                                    </>
+                                                )}
+                                            </Button>
+                                            <Button variant="outline" onClick={handleStopTTS}>
+                                                <Square className="mr-2 h-4 w-4" />
+                                                Stop Audio
+                                            </Button>
                                         </>
                                     )}
-                                </Button>
-                            )}
-
-                            {(ttsPlaying || ttsPaused) && (
-                                <>
-                                    <Button variant="outline" onClick={handlePauseTTS}>
-                                        {ttsPlaying ? (
-                                            <>
-                                                <Pause className="mr-2 h-4 w-4" />
-                                                Hentikan Audio
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Play className="mr-2 h-4 w-4" />
-                                                Lanjutkan Audio
-                                            </>
-                                        )}
-                                    </Button>
-                                    <Button variant="outline" onClick={handleStopTTS}>
-                                        <Square className="mr-2 h-4 w-4" />
-                                        Stop Audio
-                                    </Button>
                                 </>
+                            ) : (
+                                <Link href={route('login')} className="inline-block">
+                                    <Button variant="outline">
+                                        <Volume2 className="mr-2 h-4 w-4" />
+                                        Masuk untuk Dengarkan Audio
+                                    </Button>
+                                </Link>
                             )}
                             <Button variant="outline" size="icon" onClick={handleShare}>
                                 <Share2 className="h-4 w-4" />

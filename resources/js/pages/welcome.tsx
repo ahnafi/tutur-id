@@ -55,6 +55,7 @@ interface HomePageProps {
     recentStories: RecentStory[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function HomePage({ featuredStories, popularNames, stats, recentStories }: HomePageProps) {
     const formatNumber = (num: number) => {
         if (num >= 1000000) {

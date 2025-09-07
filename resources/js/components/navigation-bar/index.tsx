@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, LogOut, Menu, Search, Trophy, User as UserIcon } from 'lucide-react';
+import { BookOpen, LogOut, Map, Menu, Search, Trophy, User as UserIcon } from 'lucide-react';
 import { useState } from 'react';
 
 export function Navigation() {
@@ -19,6 +19,7 @@ export function Navigation() {
         { href: route('stories.index'), label: 'Cerita', icon: BookOpen },
         { href: route('names.index'), label: 'Nama Nusantara', icon: Search },
         { href: route('leaderboard.index'), label: 'Leaderboard', icon: Trophy },
+        { href: route('map.index'), label: 'Peta', icon: Map },
     ];
 
     return (
@@ -56,7 +57,7 @@ export function Navigation() {
                                     <span>Halo, {user.name}</span>
                                 </Link>
                             </Button>
-                            <Button variant="ghost" asChild className="bg-red-600 hover:bg-red-700 text-gray-50">
+                            <Button variant="ghost" asChild className="bg-red-600 text-gray-50 hover:bg-red-700">
                                 <Link href={route('logout')} method="post" as="button" className="flex items-center space-x-2">
                                     <LogOut className="h-4 w-4" />
                                     <span>Keluar</span>
@@ -115,7 +116,7 @@ export function Navigation() {
                                                 Profile
                                             </Link>
                                         </Button>
-                                        <Button variant="ghost" className="w-full justify-start bg-red-600 hover:bg-red-700 text-gray-50" asChild>
+                                        <Button variant="ghost" className="w-full justify-start bg-red-600 text-gray-50 hover:bg-red-700" asChild>
                                             <Link href={route('logout')} method="post" as="button" onClick={() => setIsOpen(false)}>
                                                 <LogOut className="mr-2 h-4 w-4" />
                                                 Keluar

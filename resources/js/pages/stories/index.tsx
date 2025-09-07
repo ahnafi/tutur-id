@@ -35,7 +35,6 @@ export default function CeritaPage({ stories, trendingStories, regions, categori
     const [selectedCategory, setSelectedCategory] = useState(filters.category);
     const [selectedType, setSelectedType] = useState(filters.type);
     const [sortBy, setSortBy] = useState(filters.sort);
-    console.log(stories);
 
     // Debounced search function
     const debouncedSearch = useCallback(

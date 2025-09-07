@@ -138,4 +138,18 @@
     .very-small-font-size {
         @apply text-xs md:text-sm;
     }
+
+    .leaflet-container {
+        background: #f8f9fa;
+    }
+
+    .leaflet-popup-content {
+        margin: 8px 12px;
+        line-height: 1.4;
+    }
+
+    .leaflet-popup-content-wrapper {
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 }

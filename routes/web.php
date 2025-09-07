@@ -17,11 +17,15 @@ Route::get('nama-nusantara/{name}', [\App\Http\Controllers\NameController::class
 Route::get('/leaderboard', [App\Http\Controllers\LeaderboardController::class, 'index'])
     ->name('leaderboard.index');
 
+// Map Routes
+Route::get('/peta', [\App\Http\Controllers\MapController::class, 'index'])->name('map.index');
+Route::get('/peta/{province}/cerita', [\App\Http\Controllers\MapController::class, 'getStoriesByProvince'])->name('map.stories');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
-    
+
     // Nama Nusantara Management Routes
     Route::post('nama-nusantara', [\App\Http\Controllers\NameController::class, 'store'])->name('names.store');
 
