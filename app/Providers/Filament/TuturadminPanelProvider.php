@@ -27,6 +27,8 @@ class TuturadminPanelProvider extends PanelProvider
             ->default()
             ->id('tuturadmin')
             ->path('tuturadmin')
+            ->brandLogo(asset('img/logo/tutur.png'))
+            ->favicon(asset('img/logo/tutur.png'))
             ->login()
             ->profile(isSimple:false)
             ->colors([
