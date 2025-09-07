@@ -141,8 +141,8 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
         try {
             const result = await generateNameFromAI(characteristics);
             setGeneratedName(result);
-        } catch (error) {
-            toast.error(error instanceof Error ? error.message : 'Gagal menghasilkan nama');
+        } catch {
+            toast.error('Gagal menghasilkan nama');
         } finally {
             setIsGenerating(false);
         }
@@ -165,8 +165,8 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                 router.reload();
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            const message = error.response?.data?.message || 'Gagal mengunggah nama';
+        } catch {
+            const message = 'Gagal mengunggah nama';
             toast.error(message);
         } finally {
             setIsUploading(false);
@@ -189,7 +189,7 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                 <div className="container max-w-screen-xl">
                     {/* Header */}
                     <div className="mb-12 text-center">
-                        <h1 className="mb-4 text-4xl font-bold text-balance text-amber-900 dark:text-gray-50 md:text-5xl">Nama Nusantara</h1>
+                        <h1 className="mb-4 text-4xl font-bold text-balance text-amber-900 md:text-5xl dark:text-gray-50">Nama Nusantara</h1>
                         <p className="mx-auto max-w-2xl text-lg text-pretty text-amber-700 dark:text-gray-300">
                             Temukan makna mendalam dari nama-nama tradisional Indonesia. Jelajahi warisan budaya yang tersimpan dalam setiap nama.
                         </p>
@@ -263,7 +263,10 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                                     </div>
                                                     <p className="mb-3 text-amber-800 dark:text-gray-300">{name.meaning}</p>
                                                     {name.category && (
-                                                        <Badge variant="outline" className="border-amber-300 text-amber-700 dark:border-gray-700 dark:text-gray-400">
+                                                        <Badge
+                                                            variant="outline"
+                                                            className="border-amber-300 text-amber-700 dark:border-gray-700 dark:text-gray-400"
+                                                        >
                                                             {name.category.name}
                                                         </Badge>
                                                     )}
@@ -300,7 +303,10 @@ export default function NamaNusantaraPage({ names, trendingNames, searchQuery, t
                                     <CardDescription>Dapatkan nama tradisional berdasarkan karakteristik yang Anda inginkan</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <Button onClick={() => setIsAIDialogOpen(true)} className="w-full bg-purple-600 hover:bg-purple-700 dark:text-gray-50">
+                                    <Button
+                                        onClick={() => setIsAIDialogOpen(true)}
+                                        className="w-full bg-purple-600 hover:bg-purple-700 dark:text-gray-50"
+                                    >
                                         <Sparkles className="mr-2 h-4 w-4" />
                                         Temukan Inspirasi
                                     </Button>

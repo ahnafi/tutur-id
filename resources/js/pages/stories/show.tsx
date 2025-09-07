@@ -112,8 +112,8 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                     text: `Baca cerita "${story.title}" dari ${story.origin_place}`,
                     url: window.location.href,
                 });
-            } catch (error) {
-                toast.error('Error sharing: ' + error);
+            } catch {
+                toast.error('Error sharing');
             }
         } else {
             navigator.clipboard.writeText(window.location.href);
@@ -136,10 +136,8 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                 setNewComment('');
                 toast.success('Komentar berhasil ditambahkan!');
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat menambah komentar';
-            toast.error(errorMessage);
+        } catch {
+            toast.error('Terjadi kesalahan saat menambah komentar');
         } finally {
             setSubmitting(false);
         }
@@ -181,10 +179,8 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                 setReplyContent('');
                 toast.success('Balasan berhasil ditambahkan!');
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat menambah balasan';
-            toast.error(errorMessage);
+        } catch {
+            toast.error('Terjadi kesalahan saat menambah balasan');
         } finally {
             setSubmitting(false);
         }
@@ -211,10 +207,8 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                 setComments(removeCommentFromList(comments));
                 toast.success('Komentar berhasil dihapus!');
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat menghapus komentar';
-            toast.error(errorMessage);
+        } catch {
+            toast.error('Terjadi kesalahan saat menghapus komentar');
         } finally {
             setDeletingComment(null);
         }
@@ -253,10 +247,8 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
                 setEditContent('');
                 toast.success('Komentar berhasil diperbarui!');
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat mengupdate komentar';
-            toast.error(errorMessage);
+        } catch {
+            toast.error('Terjadi kesalahan saat mengupdate komentar');
         }
     };
 
@@ -515,9 +507,9 @@ export default function StoryDetailPage({ story, relatedStories }: StoryDetailPa
 
             // Mulai putar audio
             await audio.play();
-        } catch (error) {
-            console.error('TTS Error:', error);
-            toast.error('Gagal mengkonversi teks ke audio: ' + (error as Error).message);
+        } catch {
+            console.error('TTS Error:');
+            toast.error('Gagal mengkonversi teks ke audio');
         } finally {
             setTtsLoading(false);
         }
